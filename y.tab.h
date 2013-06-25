@@ -9,3 +9,6 @@
 # define DE 264
 # define SN 265
 # define UE 266
+# define CT 267
+# define CST 268
+# define OPR 269

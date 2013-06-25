@@ -2,17 +2,19 @@
 typedef char* string;
 #define YYSTYPE string
 %}
-%token ST NE FM SP WE GY IT DE SN UE
+%token ST NE FM SP WE GY IT DE SN UE CT
 %%
 Sql : Statement | Sql Statement
-Statement : select|insert|delete|update
+Statement : select|insert|delete|update|create
 
 select: SP st|st
 st:ST SP NE SP FM SP NE SN{
     printf("YES!\n");
     printf("%s is %s years old!!!\n", $1, $3);
 }
-
+create : CT SN {
+    printf("create!\n");
+ }
 insert: IT SN{
     printf("Insert\n");
 }

@@ -52,46 +52,55 @@ typedef int YYSTYPE;
 
 extern int YYPARSE_DECL();
 
-#define SELECT 257
-#define NAME 258
-#define FROM 259
+#define ST 257
+#define NE 258
+#define FM 259
 #define SP 260
-#define WHERE 261
-#define GB 262
-#define INSERT 263
-#define DELETE 264
+#define WE 261
+#define GY 262
+#define IT 263
+#define DE 264
+#define SN 265
+#define update 266
 #define YYERRCODE 256
 static const short yylhs[] = {                           -1,
-    0,
+    0,    0,    0,    1,    1,    1,    1,    2,    3,    4,
 };
 static const short yylen[] = {                            2,
-    7,
+    1,    3,    1,    1,    1,    1,    1,    7,    1,    1,
 };
 static const short yydefred[] = {                         0,
-    0,    0,    0,    0,    0,    0,    0,    1,
+    0,    9,   10,    3,    7,    0,    1,    4,    5,    6,
+    0,    0,    0,    2,    0,    0,    0,    8,
 };
-static const short yydgoto[] = {                          2,
+static const short yydgoto[] = {                          6,
+    7,    8,    9,   10,
 };
 static const short yysindex[] = {                      -257,
- -259,    0, -256, -255, -253, -252, -254,    0,
+ -259,    0,    0,    0,    0, -263,    0,    0,    0,    0,
+ -255, -253, -248,    0, -254, -246, -243,    0,
 };
 static const short yyrindex[] = {                         0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,
 };
 static const short yygindex[] = {                         0,
+    4,    0,    0,    0,
 };
-#define YYTABLESIZE 8
+#define YYTABLESIZE 16
 static const short yytable[] = {                          1,
-    3,    4,    0,    8,    5,    6,    0,    7,
+   11,   12,   13,    1,   16,    2,    3,    4,    5,    2,
+    3,   15,    5,   17,   18,   14,
 };
 static const short yycheck[] = {                        257,
-  260,  258,   -1,  258,  260,  259,   -1,  260,
+  260,  265,  258,  257,  259,  263,  264,  265,  266,  263,
+  264,  260,  266,  260,  258,   12,
 };
-#define YYFINAL 2
+#define YYFINAL 6
 #ifndef YYDEBUG
 #define YYDEBUG 0
 #endif
-#define YYMAXTOKEN 264
+#define YYMAXTOKEN 266
 #if YYDEBUG
 static const char *yyname[] = {
 
@@ -101,12 +110,21 @@ static const char *yyname[] = {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"SELECT","NAME","FROM","SP",
-"WHERE","GB","INSERT","DELETE",
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"ST","NE","FM","SP","WE","GY",
+"IT","DE","SN","update",
 };
 static const char *yyrule[] = {
-"$accept : Statement",
-"Statement : SELECT SP NAME SP FROM SP NAME",
+"$accept : Sql",
+"Sql : Statement",
+"Sql : Sql SN Statement",
+"Sql : SN",
+"Statement : select",
+"Statement : insert",
+"Statement : delete",
+"Statement : update",
+"select : ST SP NE SP FM SP NE",
+"insert : IT",
+"delete : DE",
 
 };
 #endif
@@ -144,7 +162,7 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 12 "paser.y"
+#line 21 "paser.y"
 int main()
 {
     yyparse();
@@ -154,7 +172,7 @@ int yyerror(char *msg)
 {
     printf("Error encountered: %s \n", msg);
 }
-#line 157 "y.tab.c"
+#line 175 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -360,14 +378,26 @@ yyreduce:
         memset(&yyval, 0, sizeof yyval);
     switch (yyn)
     {
-case 1:
-#line 7 "paser.y"
+case 8:
+#line 9 "paser.y"
 	{
     printf("YES!\n");
     printf("%s is %s years old!!!\n", yystack.l_mark[-6], yystack.l_mark[-4]);
 }
 break;
-#line 370 "y.tab.c"
+case 9:
+#line 13 "paser.y"
+	{
+    printf("Insert\n");
+}
+break;
+case 10:
+#line 17 "paser.y"
+	{
+    printf("delete\n");
+}
+break;
+#line 400 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

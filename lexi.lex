@@ -15,16 +15,17 @@ where  (where|WHERE)
 gb     (group|GROUP)
 insert    (INSERT|insert)
 delete   (DELETE|delete)
+semicolon  ;
 %%
-{select} { yylval = strdup(yytext);return SELECT; }
-{from} { yylval = strdup(yytext);return FROM; }
-{name} { yylval = strdup(yytext);return NAME; }
+{semicolon} {yylval = strdup(yytext);return SN;}
+{select} { yylval = strdup(yytext);return ST; }
+{insert} { yylval = strdup(yytext);return IT; }
+{delete} { yylval = strdup(yytext);return DE; }
+{from} { yylval = strdup(yytext);return FM; }
+{where} { yylval = strdup(yytext);return WE; }
 {space} { yylval = strdup(yytext);return SP; }
-{where} { yylval = strdup(yytext);return WHERE; }
-{gb} { yylval = strdup(yytext);return GB; }
-{insert} { yylval = strdup(yytext);return INSERT; }
-{delete} { yylval = strdup(yytext);return DELETE; }
-
+{gb} { yylval = strdup(yytext);return GY; }
+{name} { yylval = strdup(yytext);return NE; }
 %%
 int yywrap()
 {

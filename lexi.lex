@@ -1,25 +1,31 @@
 %{
-#include "stdio.h"
-#define ENDMARK -10
-    int linenum=0;
+#include "y.tab.h"
+#include <stdio.h>
+#include <string.h>
+extern char* yylval;
 %}
-whitespace      [ ]
-number [0-9]+
+char [A-Za-z]
+num [0-9]
+eq [=]
+select (SELECT|select)
+name {char}+
+from   (FROM|from)
+space  [ /n/t]
+where  (where|WHERE)
+gb     (group|GROUP)
+insert    (INSERT|insert)
+delete   (DELETE|delete)
 %%
-{whitespace} {
-    printf("whitespace");
-}
-{number} {
-    printf("number");
-}
+{select} { yylval = strdup(yytext);return SELECT; }
+{from} { yylval = strdup(yytext);return FROM; }
+{name} { yylval = strdup(yytext);return NAME; }
+{space} { yylval = strdup(yytext);return SP; }
+{where} { yylval = strdup(yytext);return WHERE; }
+{gb} { yylval = strdup(yytext);return GB; }
+{insert} { yylval = strdup(yytext);return INSERT; }
+{delete} { yylval = strdup(yytext);return DELETE; }
+
 %%
-int main()
-{
-    linenum=0;
-    yylex();
-    printf("\nLine Count: %d\n",linenum);
-    return 0;
-}
 int yywrap()
 {
     return 1;

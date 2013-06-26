@@ -5,7 +5,7 @@
 extern char* yylval;
 %}
 char [A-Za-z]
-num [0-9]
+num [0-9]+
 name {char}+|\*
 from   (FROM|from)
 space  [ /n/t]
@@ -13,25 +13,29 @@ sp     {space}+
 where  (where|WHERE)
 by     (BY|by)
 gb     (group|GROUP){space}{by}
+lp     {space}*\({space}*
+rp     {space}*\){space}*
+comma  {space}*,{space}*
 drop (drop|DROP)
 semicolon  {space}*;{space}*
 having (having|HAVING)
 ob (ORDER|order){space}{by}
 into     (INTO|into)
+type     (int|INT|char|CHAR|real|REAL)
 
 /* table */
 table (TABLE|table)
-create_table (CREATE|create){space}{table}
+create_table (CREATE|create){sp}{table}
 
 /* constraint */
 constraint  (CONSTRAINT|constraint)
 
 /* constraint types */
-null NULL|NOT{space}NULL
+null null|NULL|NOT{sp}NULL|not{sp}null
 unique (unique|UNIQUE)
 key   (KEY|key)
-p_key (PRIMARY|primary){space}{key}
-f_key (FOREIGN|foreign){space}{key}
+p_key (PRIMARY|primary){sp}{key}
+f_key (FOREIGN|foreign){sp}{key}
 
 /* op */
 eq   [=]
@@ -63,15 +67,15 @@ join (join|JOIN)
 /* alert */
 alert (alert|ALERT)
 column (column|COLUMN)
-alert_table {alert}{space}{table}
+alert_table {alert}{sp}{table}
 add (ADD|add)
-alert_column {alert}{space}{column}
-drop_column {drop}{space}{column}
-drop_table {drop}{space}{table}
+alert_column {alert}{sp}{column}
+drop_column {drop}{sp}{column}
+drop_table {drop}{sp}{table}
 
 /* insert */
 insert    (INSERT|insert)
-ins {insert}{space}{into}
+ins {insert}{sp}{into}
 values (values|VALUES)
 
 /* update */
@@ -89,6 +93,12 @@ exists (exists|EXISTS)
 /* union */
 union (union|UNION)
 %%
+{null} {yylval=strdup(yytext);return NL;}
+{num} {yylval=strdup(yytext);return NM;}
+{type} {yylval=strdup(yytext);return TE;}
+{comma} {yylval=strdup(yytext);return CA;}
+{lp} {yylval = strdup(yytext);return LP;}
+{rp} {yylval = strdup(yytext);return RP;}
 {semicolon} {yylval = strdup(yytext);return SN;}
 {select} { yylval = strdup(yytext);return ST; }
 {ins} { yylval = strdup(yytext);return IT; }
@@ -107,7 +117,7 @@ union (union|UNION)
 {as} { yylval = strdup(yytext);return AS; }
 {when} { yylval = strdup(yytext);return WN; }
 {then} { yylval = strdup(yytext);return TN; }
-{else} { yylval = strdup(yytext);return ELSE; }
+{els} { yylval = strdup(yytext);return ELSE; }
 {top} { yylval = strdup(yytext);return TP; }
 {between} { yylval = strdup(yytext);return BN; }
 {in} { yylval = strdup(yytext);return IN; }
@@ -123,6 +133,10 @@ union (union|UNION)
 {set} { yylval = strdup(yytext);return SET; }
 {delete} { yylval = strdup(yytext);return DE; }
 
+{any} { yylval = strdup(yytext);return AY; }
+{all} { yylval = strdup(yytext);return AL; }
+{exists} { yylval = strdup(yytext);return EX; }
+{union} { yylval = strdup(yytext);return UN; }
 {name} { yylval = strdup(yytext);return NE; }
 %%
 int yywrap()

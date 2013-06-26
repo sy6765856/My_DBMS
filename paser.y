@@ -2,11 +2,12 @@
 typedef char* string;
 #define YYSTYPE string
 %}
-%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN ATB ATC AD DPC DPT VA SET AY AL EX UN LP RP CA TE NM NL
+%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DPC DPT VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT
 %%
 /* sql statement */
 Sql : Statement | Sql Statement
-Statement : select|insert|delete|update|create|alert|drop
+Statement : select|insert|delete|update|create|alert|drop|exit
+exit : EXIT{puts("Exit Successfully!!");return 0;}
 
 /* select */
 select: SP st|st
@@ -16,7 +17,7 @@ st:ST SP NE SP FM SP NE SN{
 }
 
 /* create table */
-create : CT SP NE LP col_def RP SN {
+create : CT TB NE LP col_def RP SN {
     printf("create!\n");
 }
 
@@ -25,28 +26,35 @@ col: NE SP TE|NE SP TE cl
 cl: LP NM RP|SP NL|LP NM RP NL
 
 /* insert */
-insert: IT SN{
+insert: IT in_f VA LP in_v RP SN{
     printf("Insert\n");
 }
+in_f:NE SP|NE LP i_f RP
+i_f:NE|NE CA i_f
+in_v:CS NE CS|in_v CA CS NE CS 
+/* condition */
+condition : NE OPR condic
+condic:NM|CS NE CS
 
 /* delete */
-delete: DE SN{
+delete: DE NE del{
     printf("delete\n");
 }
+del:SN|WE condition SN
 
 /* update */
-update: UE SN{
+update: UE NE SET exp SN{
     printf("update\n");
 }
+exp:ep |ep WE condition
+ep:NE OPR NE OPR it|NE OPR it
+it:NM|CS NE CS
 
 /* alert */
-alert: alert_table|alert_column
-alert_table : ATB SN{
+alert: AT TB aler SN{
     printf ("alert\n");
- }
-alert_column: ATC SN{
-    printf("alert\n");
 }
+aler:SN
 
 /* drop */
 drop: drop_table|drop_column
@@ -60,10 +68,12 @@ drop_table: DPT SN{
 %%
 int main()
 {
+    printf("\e[1;32m");
     yyparse();
+    printf("\e[0m");
     return 0;
 }
 int yyerror(char *msg)
 {
-    printf("Error encountered: %s \n", msg);
+    printf("\e[1;31mError encountered: \e[1;32m%s\e[0m \n", msg);
 }

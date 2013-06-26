@@ -69,9 +69,7 @@ join (join|JOIN)
 /* alert */
 alert (alert|ALERT)
 column (column|COLUMN)
-add (ADD|add)
-drop_column {drop}{sp}{column}
-drop_table {drop}{sp}{table}
+add {sp}(ADD|add){sp}
 
 /* insert */
 insert    (INSERT|insert)
@@ -129,8 +127,7 @@ union (union|UNION)
 {alert} { yylval = strdup(yytext);return AT; }
 {column} { yylval = strdup(yytext);return CN; }
 {add} { yylval = strdup(yytext);return AD; }
-{drop_column} { yylval = strdup(yytext);return DPC; }
-{drop_table} { yylval = strdup(yytext);return DPT; }
+{drop} { yylval = strdup(yytext);return DP; }
 {values} { yylval = strdup(yytext);return VA; }
 {update} { yylval = strdup(yytext);return UE; }
 {set} { yylval = strdup(yytext);return SET; }

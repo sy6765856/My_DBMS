@@ -2,7 +2,7 @@
 typedef char* string;
 #define YYSTYPE string
 %}
-%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DPC DPT VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT
+%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DP DPT VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT
 %%
 /* sql statement */
 Sql : Statement | Sql Statement
@@ -47,6 +47,7 @@ update: UE NE SET exp SN{
     printf("update\n");
 }
 exp:ep |ep WE condition
+    /* expression */
 ep:NE OPR NE OPR it|NE OPR it
 it:NM|CS NE CS
 
@@ -54,17 +55,15 @@ it:NM|CS NE CS
 alert: AT TB aler SN{
     printf ("alert\n");
 }
-aler:SN
+aler:add
+add:AD col_def
 
 /* drop */
-drop: drop_table|drop_column
-drop_column: DPC SN{
+drop: drop_column
+drop_column: DP SN{
     printf ("drop\n");
  }
 
-drop_table: DPT SN{
-    printf("drpp\n");
- }
 %%
 int main()
 {

@@ -68,7 +68,7 @@ join (join|JOIN)
 
 /* alert */
 alert (alert|ALERT)
-column (column|COLUMN)
+column {sp}(column|COLUMN){sp}
 add {sp}(ADD|add){sp}
 
 /* insert */

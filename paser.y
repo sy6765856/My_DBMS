@@ -52,11 +52,12 @@ ep:NE OPR NE OPR it|NE OPR it
 it:NM|CS NE CS
 
 /* alert */
-alert: AT TB aler SN{
+alert: AT TB NE aler SN{
     printf ("alert\n");
 }
-aler:add
+aler:add|alc
 add:AD col_def
+alc:AT CN col
 
 /* drop */
 drop: drop_column

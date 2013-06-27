@@ -12,7 +12,7 @@ typedef char* string;
  int cp[3];
  int k=0;
 %}
-%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DP TBS VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT USE DB SW
+%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DP TBS VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT USE DB SW EQ
 %%
 /* sql statement */
 Sql : Statement | Sql Statement
@@ -35,7 +35,7 @@ show: SW TBS SN{
  }
 /* select */
 select: SP st|st
-st:ST SP NE SP FM SP NE SN{
+st:ST SP NE FM NE SN{
     printf("YES!\n");
     printf("%s is %s years old!!!\n", $1, $3);
 }
@@ -50,20 +50,23 @@ col: NE SP TE|NE SP TE cl
 cl: LP NM RP|SP NL|LP NM RP NL
 
 /* insert */
-insert: IT NE in_f VA LP in_v RP SN{
+insert: IT NE in_f VA LP in_v RP SN
+{
     insert($2,st[(k+1)%3],cp[(k+1)%3],st[(k+2)%3],cp[(k+2)%3]);
 }
 
 
-in_f:in_ff{
+in_f:in_ff
+{
     st_init();
- }
+}
 
 in_ff:SP|LP i_f RP
 i_f:NE{st_push($1);}|NE CA i_f{st_push($1);}
 
 
-in_v:in_vv{
+in_v:in_vv
+{
     st_init();
 }
 
@@ -71,23 +74,29 @@ in_vv:NM{st_push($1);}|CS NE CS{st_push($2);}|in_vv CA CS NE CS{st_push($4);} | 
 
 
 /* condition */
-condition : NE OPR condic
-condic:NM|CS NE CS
+condition : NE coo condic{st_push($1);}
+coo: EQ{st_push($1);} | OPR{st_push($1);}
+condic:NM{st_push($1);}|CS NE CS{st_push($2);}
 
 /* delete */
-delete: DE NE del{
-    printf("delete\n");
+delete: DE FM NE del
+{
+    delete($3);
 }
 del:SN|WE condition SN
 
 /* update */
-update: UE NE SET exp SN{
-    printf("update\n");
+update: UE NE SET NE EQ exp SN
+{
+    update($2,$4,st[(k+2)%3],cp[(k+2)%3]);
 }
-exp:ep |ep WE condition
-    /* expression */
-ep:NE OPR NE OPR it|NE OPR it
-it:NM|CS NE CS
+/* expression */
+exp:epp WE conditio|epp
+epp:ep{st_init();}
+ep:con OPR con{st_push($2);}|con
+con:condic|NE{st_push($1);}
+
+conditio :condition{st_init();}
 
 /* alert */
 alert: AT TB NE aler SN{

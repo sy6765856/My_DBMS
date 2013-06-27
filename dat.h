@@ -7,5 +7,7 @@
 #include "types.h"
 #define LEN 1000
 #define M 10000
-int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cp);
+int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv);
+int delete(char tb_name[]);
+int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf);
 #endif

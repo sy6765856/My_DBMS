@@ -8,9 +8,9 @@ exit exit|EXIT
 char [A-Za-z]
 num [0-9]+
 name {char}+|\*
-from   (FROM|from)
 space  [ /n/t]
 sp     {space}+
+from   {sp}(FROM|from){sp}
 where  {sp}(where|WHERE){sp}
 by     (BY|by)
 gb     (group|GROUP){space}{by}
@@ -45,10 +45,11 @@ f_key (FOREIGN|foreign){sp}{key}
 
 /* op */
 eq   [=]
+eql {space}*{eq}{space}*
 nt  [!]
 opr1 [<>]
 opr2 (({opr1}|{nt}){eq})|({nt}{opr1})|([<][>])
-opr  {space}*({opr2}|{opr1}|{eq}|{nt}){space}*
+opr  {space}*({opr2}|{opr1}){space}*
 
 /* op_en */
 not (not|NOT)
@@ -86,7 +87,6 @@ set {sp}(set|SET){sp}
 
 /* delete */
 delete   (DELETE|delete)
-del {delete}{sp}{from}{sp}
 
 /* Nested query */
 any (any|ANY)
@@ -116,6 +116,7 @@ union (union|UNION)
 {create} {yylval = strdup(yytext);return CT;}
 {constraint} {yylval = strdup(yytext);return CST;}
 
+{eql} {yylval = strdup(yytext);return EQ;}
 {opr} {yylval = strdup(yytext);return OPR;}
 {not} {yylval = strdup(yytext);return OPR_EN;}
 {and} {yylval = strdup(yytext);return OPR_EN;}
@@ -136,7 +137,7 @@ union (union|UNION)
 {values} { yylval = strdup(yytext);return VA; }
 {update} { yylval = strdup(yytext);return UE; }
 {set} { yylval = strdup(yytext);return SET; }
-{del} { yylval = strdup(yytext);return DE; }
+{delete} { yylval = strdup(yytext);return DE; }
 
 {any} { yylval = strdup(yytext);return AY; }
 {all} { yylval = strdup(yytext);return AL; }

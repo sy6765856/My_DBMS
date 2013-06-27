@@ -43,3 +43,4 @@
 # define EXIT 299
 # define USE 300
 # define DB 301
+# define SW 302

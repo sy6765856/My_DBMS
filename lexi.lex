@@ -17,6 +17,7 @@ gb     (group|GROUP){space}{by}
 lp     {space}*\({space}*
 rp     {space}*\){space}*
 comma  {space}*,{space}*
+show   (show|SHOW)
 commas \'
 use (use|USE)
 database {sp}(database|DATABASE){sp}
@@ -141,6 +142,7 @@ union (union|UNION)
 {union} { yylval = strdup(yytext);return UN; }
 {exit} { yylval = strdup(yytext);return EXIT; }
 {use} { yylval = strdup(yytext);return USE; }
+{show} { yylval = strdup(yytext);return SW; }
 {database} { yylval = strdup(yytext);return DB; }
 {name} { yylval = strdup(yytext);return NE; }
 %%

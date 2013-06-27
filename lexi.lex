@@ -18,6 +18,8 @@ lp     {space}*\({space}*
 rp     {space}*\){space}*
 comma  {space}*,{space}*
 commas \'
+use (use|USE)
+database {sp}(database|DATABASE){sp}
 drop (drop|DROP)
 semicolon  {space}*;{space}*
 having (having|HAVING)
@@ -138,6 +140,8 @@ union (union|UNION)
 {exists} { yylval = strdup(yytext);return EX; }
 {union} { yylval = strdup(yytext);return UN; }
 {exit} { yylval = strdup(yytext);return EXIT; }
+{use} { yylval = strdup(yytext);return USE; }
+{database} { yylval = strdup(yytext);return DB; }
 {name} { yylval = strdup(yytext);return NE; }
 %%
 int yywrap()

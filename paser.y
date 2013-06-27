@@ -1,14 +1,20 @@
 %{
+#include "stdio.h"
+#include "dbf.h"
 typedef char* string;
 #define YYSTYPE string
 %}
-%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DP DPT VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT
+%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DP DPT VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT USE DB
 %%
 /* sql statement */
 Sql : Statement | Sql Statement
-Statement : select|insert|delete|update|create|alert|drop|exit
+Statement : select|insert|delete|update|create|alert|drop|exit|use
 exit : EXIT{puts("Exit Successfully!!");return 0;}
-
+/* USE */
+use:USE DB NE SN{
+    use_database($3);
+    printf ("use db %s\n",$3);
+ }
 /* select */
 select: SP st|st
 st:ST SP NE SP FM SP NE SN{

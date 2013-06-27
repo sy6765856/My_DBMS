@@ -41,3 +41,5 @@
 # define CS 297
 # define TB 298
 # define EXIT 299
+# define USE 300
+# define DB 301

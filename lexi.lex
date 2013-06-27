@@ -18,6 +18,7 @@ lp     {space}*\({space}*
 rp     {space}*\){space}*
 comma  {space}*,{space}*
 show   (show|SHOW)
+tables {sp}(tables|TABLES){space}*
 commas \'
 use (use|USE)
 database {sp}(database|DATABASE){sp}
@@ -109,6 +110,7 @@ union (union|UNION)
 {where} { yylval = strdup(yytext);return WE; }
 {sp} { yylval = strdup(yytext);return SP; }
 {gb} { yylval = strdup(yytext);return GY; }
+{tables} {yylval = strdup(yytext);return TBS;}
 {table} {yylval = strdup(yytext);return TB;}
 
 {create} {yylval = strdup(yytext);return CT;}

@@ -35,12 +35,20 @@ int use_database(char db_name[])
 /* show tables; */
 int show_tables()
 {
+    puts("show");
     return 0;
 }
 
 /* create table table_name; */
+int sv_create_table()
+{
+    puts("fsd");
+    //return create_table();
+    return 0;
+}
 int create_table(Table table, p_TableMode modes)
 {
+    printf("create!\n");
     return 0;
 }
 

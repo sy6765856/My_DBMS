@@ -1,9 +1,16 @@
 %{
 #include "stdio.h"
+#include "string.h"
 #include "dbf.h"
+#include "dat.h"
 #include "def.h"
 typedef char* string;
 #define YYSTYPE string
+#define LEN 1000
+#define M 10000
+ char st[3][LEN][M];
+ int cp[3];
+ int k=0;
 %}
 %token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DP TBS VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT USE DB SW
 %%
@@ -43,12 +50,26 @@ col: NE SP TE|NE SP TE cl
 cl: LP NM RP|SP NL|LP NM RP NL
 
 /* insert */
-insert: IT in_f VA LP in_v RP SN{
-    printf("Insert\n");
+insert: IT NE in_f VA LP in_v RP SN{
+    insert($2,st[(k+1)%3],cp[(k+1)%3],st[(k+2)%3],cp[(k+2)%3]);
 }
-in_f:NE SP|NE LP i_f RP
-i_f:NE|NE CA i_f
-in_v:CS NE CS|in_v CA CS NE CS 
+
+
+in_f:in_ff{
+    st_init();
+ }
+
+in_ff:SP|LP i_f RP
+i_f:NE{st_push($1);}|NE CA i_f{st_push($1);}
+
+
+in_v:in_vv{
+    st_init();
+}
+
+in_vv:NM{st_push($1);}|CS NE CS{st_push($2);}|in_vv CA CS NE CS{st_push($4);} | in_vv CA NM{st_push($3);}
+
+
 /* condition */
 condition : NE OPR condic
 condic:NM|CS NE CS
@@ -85,10 +106,22 @@ drop_column: DP SN{
 %%
 int main()
 {
+    memset(cp,0,sizeof(cp));
     printf("\e[1;32m");
     yyparse();
     printf("\e[0m");
     return 0;
+}
+int st_init()
+{
+    k=(k+1)%3;
+    cp[k]=0;
+    return 1;
+}
+int st_push(char a[])
+{
+    strcpy(st[k][cp[k]],a);cp[k]++;
+    return 1;
 }
 int yyerror(char *msg)
 {

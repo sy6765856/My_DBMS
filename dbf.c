@@ -7,10 +7,6 @@
 extern char g_db_file_name[260];
 p_Table g_tables;
 int g_num_table = 0;
-struct nd
-{
-    int a;
-}p_TabelMode;
 /* create database database_name; */
 int create_database(char db_name[])
 {
@@ -46,7 +42,7 @@ int sv_create_table()
     //return create_table();
     return 0;
 }
-int create_table(Table table, p_TableMode modes)
+int create_table(Table table, p_TableNode modes)
 {
     printf("create!\n");
     return 0;
@@ -55,7 +51,7 @@ int create_table(Table table, p_TableMode modes)
 /* alter table table_name                           *
  * [add column_name column_type] or                 *
  * [drop / alter COLUMN column_name column_type];   */
-int alter_table(char table_name[], TableMode table_mode, AlterMode alter_mode)
+int alter_table(char table_name[], TableNode table_mode, AlterMode alter_mode)
 {
     return 0;
 }
@@ -78,20 +74,20 @@ int rename_table(char table_name[], char new_name[])
 }
 
 /* add column_name column_type; */
-int add_column(Table table, TableMode table_mode)
+int add_column(Table table, TableNode table_mode)
 {
 
     return 0;
 }
 
 /* drop COLUMN column_name; */
-int drop_column(Table table, TableMode table_mode)
+int drop_column(Table table, TableNode table_mode)
 {
     return 0;
 }
 
 /* alter COLUMN column_name column_type; */
-int alter_column(Table table, TableMode table_mode)
+int alter_column(Table table, TableNode table_mode)
 {
     return 0;
 }

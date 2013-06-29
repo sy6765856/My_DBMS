@@ -36,6 +36,7 @@ typedef struct {
     int next_table;
     int head_column;
     int tail_column;
+    int pos;
 } TableNode, *p_TableNode;
 
 int create_database(char db_name[]);
@@ -43,19 +44,19 @@ int drop_database(char db_name[]);
 int use_database(char db_name[]);
 
 int show_tables();
-int create_table(TableNode, p_ColumnNode);
-int alter_table(char table_name[], Column, AlterMode);
+int create_table(Table table, p_TableNode modes);
+//int alter_table(char table_name[], Column, AlterMode);
 int drop_table(char table_name[]);
 int show_table(char table_name[]);
 int rename_table(char table_name[], char new_name[]);
 
-int add_column(TableNode table_node, Column);
-int drop_column(TableNode table_node, Column);
-int alter_column(TableNode table_node, Column);
+//int add_column(TableNode table_node, Column);
+//int drop_column(TableNode table_node, Column);
+//int alter_column(TableNode table_node, Column);
 
 Boolean check_exist_db(char db_name[]);
 Boolean check_exist_table(char table_name[]);
-int gen_tables(FILE *fp);
+int gen_tables(Table tables[],FILE *fp);
 int get_table_node(char table_name[], p_TableNode table_node);
 int get_modes(TableNode table_node, p_Column columns);
 char *add_dbf_ext(char db_name[], char db_file_name[]);

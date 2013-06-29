@@ -79,10 +79,11 @@ coo: EQ{st_push($1);} | OPR{st_push($1);}
 condic:NM{st_push($1);}|CS NE CS{st_push($2);}
 
 /* delete */
-delete: DE FM NE del
+delete: DE FM NE dell
 {
-    delete($3);
+    delete($3,st[(k+2)%3],cp[(k+2)%3]);
 }
+dell:del{st_init();}
 del:SN|WE condition SN
 
 /* update */

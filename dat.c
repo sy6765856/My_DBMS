@@ -106,11 +106,19 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
 int delete(char tb_name[],char cond[LEN][M],int cp)
 {
     printf ("%s\n",tb_name);
-
+    printf("%d\n",cp);
+    for(i=0;i<cp;i++)puts(cond[i]);
     TableNode nd;
     strcpy(nd.table.table_name,tb_name);
     //    get(nd);
-    
+    if(cp)
+    {
+        
+    }
+    else
+    {
+        //do_dbf(file_length);
+    }
     return 1;
 }
 

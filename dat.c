@@ -5,7 +5,7 @@
 #include "dat.h"
 #include "dbf.h"
 #include "types.h"
-#include <sys/mman.h> 
+#include <sys/mman.h>
 typedef struct
 {
     int pre_col;
@@ -13,7 +13,7 @@ typedef struct
     int nxt_col;
     int nxt_row;
     char data[256];
-}TB,*Tb;
+}TB;
 int i,j;
 int error(char err[])
 {
@@ -55,6 +55,7 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
     
     /* get the absolute position in dat file */
     TableNode nd;
+    p_TableNode ndr=&nd;
     strcpy(nd.table.table_name,tb_name);
     //    get(nd);
     int tb_pos=nd.pos=0;
@@ -113,7 +114,29 @@ int delete(char tb_name[],char cond[LEN][M],int cp)
     //    get(nd);
     if(cp)
     {
-        
+        char col_name[M];
+        strcpy(col_name,cond[0]);
+        int tb_pos=nd.pos=0;
+        int row_pos=tb_pos;
+        do
+        {
+            TB tb_hd=*(TB*)(&dat[row_pos]);
+            int cl_pos=row_pos;
+            int col_pos=nd.head_column;
+            do
+            {
+                TB rc=*(TB*)(&dat[cl_pos]);
+                ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
+                if(strcmp(col_name,cnd.table_mode.field_name)==0)
+                {
+                    strcpy(rc.data,cond[0]);
+                    *(TB*)(&dat[cl_pos])=rc;
+                }
+                col_pos=cnd.next_column;
+                cl_pos=rc.nxt_col;
+            }while(col_pos!=nd.tail_column);
+            row_pos=tb_hd.nxt_row;
+        }while(row_pos!=file_length);
     }
     else
     {
@@ -155,5 +178,3 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)//type is th
     }while(row_pos!=file_length);
     return 1;
 }
-
-

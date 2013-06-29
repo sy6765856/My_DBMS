@@ -62,3 +62,4 @@ int get_modes(TableNode table_node, p_Column columns);
 char *add_dbf_ext(char db_name[], char db_file_name[]);
 
 #endif
+

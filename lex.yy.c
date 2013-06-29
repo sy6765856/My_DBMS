@@ -368,8 +368,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 50
-#define YY_END_OF_BUFFER 51
+#define YY_NUM_RULES 51
+#define YY_END_OF_BUFFER 52
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -379,55 +379,55 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[451] =
     {   0,
-        0,    0,   51,   50,   13,   50,    5,    6,    7,   49,
-        4,    2,    8,   20,   19,   20,   49,   49,   49,   49,
-       49,   49,   49,   49,   49,   49,   49,   49,   49,   49,
-       49,   49,   49,   49,   49,   49,   49,   49,   49,   49,
-       49,   49,   49,   13,   49,   49,   49,   13,   49,   49,
-       49,   13,    0,    6,    7,    4,    8,   20,   19,   20,
+        0,    0,   52,   51,   14,   51,    5,    7,    8,    6,
+        4,    2,    9,   21,   20,   21,   50,   50,   50,   50,
+       50,   50,   50,   50,   50,   50,   50,   50,   50,   50,
+       50,   50,   50,   50,   50,   50,   50,   50,   50,   50,
+       50,   50,   50,   14,   50,   50,   50,   14,   50,   50,
+       50,   14,    0,    7,    8,    4,    9,   21,   20,   21,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,   13,    0,    0,   20,    6,    7,    4,
-        2,    8,   20,   19,   49,   49,   49,   24,   49,   49,
-       49,   49,   49,   49,   49,   49,   49,   30,   49,   49,
+        0,    0,    0,   14,    0,    0,   21,    7,    8,    4,
+        2,    9,   21,   20,   50,   50,   50,   25,   50,   50,
+       50,   50,   50,   50,   50,   50,   50,   31,   50,   50,
 
-       49,   49,   23,   49,   49,   49,   49,   49,   49,   49,
-       49,   49,   49,   49,   49,   49,   49,   49,   49,   49,
-       49,   49,   49,   49,   30,   49,   49,   49,   49,   49,
-       49,   49,   49,   49,   49,   49,   49,   49,   49,   13,
-       49,   49,   13,   49,   49,   49,   49,   49,   49,   49,
-       49,   49,   49,   49,   49,   49,    0,    0,    0,    0,
+       50,   50,   24,   50,   50,   50,   50,   50,   50,   50,
+       50,   50,   50,   50,   50,   50,   50,   50,   50,   50,
+       50,   50,   50,   50,   31,   50,   50,   50,   50,   50,
+       50,   50,   50,   50,   50,   50,   50,   50,   50,   14,
+       50,   50,   14,   50,   50,   50,   50,   50,   50,   50,
+       50,   50,   50,   50,   50,   50,    0,    0,    0,    0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,   49,   42,   22,   41,   49,   49,   49,   49,
-       49,   49,   49,   49,   49,   49,    3,   49,   49,   21,
-       49,   49,   49,   49,   49,   28,   49,   49,   46,   49,
+        0,    0,   50,   43,   23,   42,   50,   50,   50,   50,
+       50,   50,   50,   50,   50,   50,    3,   50,   50,   22,
+       50,   50,   50,   50,   50,   29,   50,   50,   47,   50,
 
-       49,   49,   49,   49,   49,   49,   49,   49,   49,   49,
-       49,   49,   49,   49,   49,   49,   49,   49,   49,   49,
-       49,   49,   49,   49,   49,   21,   49,   49,   49,   49,
-       49,   49,   49,   49,   49,   49,   49,   49,    0,    0,
+       50,   50,   50,   50,   50,   50,   50,   50,   50,   50,
+       50,   50,   50,   50,   50,   50,   50,   50,   50,   50,
+       50,   50,   50,   50,   50,   22,   50,   50,   50,   50,
+       50,   50,   50,   50,   50,   50,   50,   50,    0,    0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,   49,   49,   49,   49,   49,   36,   27,   49,
-       45,   49,   49,   32,   31,    0,   49,    1,   49,   47,
-       26,   49,   49,   49,   25,   49,   49,   49,   49,   49,
-       49,   49,   49,   49,   49,   49,   49,   49,   49,   49,
-       49,   49,   49,    0,   49,   49,   49,   49,   49,   49,
+        0,    0,   50,   50,   50,   50,   50,   37,   28,   50,
+       46,   50,   50,   33,   32,    0,   50,    1,   50,   48,
+       27,   50,   50,   50,   26,   50,   50,   50,   50,   50,
+       50,   50,   50,   50,   50,   50,   50,   50,   50,   50,
+       50,   50,   50,    0,   50,   50,   50,   50,   50,   50,
 
-       49,   35,    0,    0,    0,   39,    0,    0,    0,    0,
-        0,    0,    0,    0,   33,   49,   49,   49,   49,   49,
-       49,   49,    0,   49,   49,   44,   49,   49,   49,   49,
-       49,   49,   49,   49,   35,   49,   49,   49,   39,   49,
-       49,   49,   49,    0,   49,   49,   49,   49,   49,   49,
-        0,    0,   11,    0,    0,    0,    0,    0,    0,    0,
-       49,   49,   17,   40,   43,    0,   49,   49,    0,   49,
-        9,   38,   37,   49,   49,   49,   49,   11,   49,   49,
-       49,   49,    0,   49,   49,    0,    0,   16,   15,   38,
-       12,    0,   29,   49,    0,    0,   49,   49,    0,   49,
+       50,   36,    0,    0,    0,   40,    0,    0,    0,    0,
+        0,    0,    0,    0,   34,   50,   50,   50,   50,   50,
+       50,   50,    0,   50,   50,   45,   50,   50,   50,   50,
+       50,   50,   50,   50,   36,   50,   50,   50,   40,   50,
+       50,   50,   50,    0,   50,   50,   50,   50,   50,   50,
+        0,    0,   12,    0,    0,    0,    0,    0,    0,    0,
+       50,   50,   18,   41,   44,    0,   50,   50,    0,   50,
+       10,   39,   38,   50,   50,   50,   50,   12,   50,   50,
+       50,   50,    0,   50,   50,    0,    0,   17,   16,   39,
+       13,    0,   30,   50,    0,    0,   50,   50,    0,   50,
 
-        0,   49,   38,   38,   49,   49,   49,   15,   16,   12,
-       49,    0,   49,   34,    0,   15,    0,   49,   14,   14,
-        0,    0,   49,   49,    1,   49,   34,   49,   15,   49,
-        0,   49,    0,    0,   49,   49,   49,   49,   48,   18,
-        0,    0,   49,   49,   48,    0,   49,   10,   10,    0
+        0,   50,   39,   39,   50,   50,   50,   16,   17,   13,
+       50,    0,   50,   35,    0,   16,    0,   50,   15,   15,
+        0,    0,   50,   50,    1,   50,   35,   50,   16,   50,
+        0,   50,    0,    0,   50,   50,   50,   50,   49,   19,
+        0,    0,   50,   50,   49,    0,   50,   11,   11,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
@@ -985,7 +985,7 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 98 "lexi.lex"
+#line 99 "lexi.lex"
 
 #line 991 "lex.yy.c"
 
@@ -1072,255 +1072,260 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 99 "lexi.lex"
+#line 100 "lexi.lex"
 {yylval=strdup(yytext);return NL;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 100 "lexi.lex"
+#line 101 "lexi.lex"
 {yylval=strdup(yytext);return NM;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 101 "lexi.lex"
+#line 102 "lexi.lex"
 {yylval=strdup(yytext);return TE;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 102 "lexi.lex"
+#line 103 "lexi.lex"
 {yylval=strdup(yytext);return CA;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 103 "lexi.lex"
+#line 104 "lexi.lex"
 {yylval=strdup(yytext);return CS;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 104 "lexi.lex"
-{yylval = strdup(yytext);return LP;}
+#line 105 "lexi.lex"
+{yylval=strdup(yytext);return SR;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 105 "lexi.lex"
-{yylval = strdup(yytext);return RP;}
+#line 106 "lexi.lex"
+{yylval = strdup(yytext);return LP;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 106 "lexi.lex"
-{yylval = strdup(yytext);return SN;}
+#line 107 "lexi.lex"
+{yylval = strdup(yytext);return RP;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 107 "lexi.lex"
-{ yylval = strdup(yytext);return ST; }
+#line 108 "lexi.lex"
+{yylval = strdup(yytext);return SN;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 108 "lexi.lex"
-{ yylval = strdup(yytext);return IT; }
+#line 109 "lexi.lex"
+{ yylval = strdup(yytext);return ST; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 109 "lexi.lex"
-{ yylval = strdup(yytext);return FM; }
+#line 110 "lexi.lex"
+{ yylval = strdup(yytext);return IT; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 110 "lexi.lex"
-{ yylval = strdup(yytext);return WE; }
+#line 111 "lexi.lex"
+{ yylval = strdup(yytext);return FM; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 111 "lexi.lex"
-{ yylval = strdup(yytext);return SP; }
+#line 112 "lexi.lex"
+{ yylval = strdup(yytext);return WE; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 112 "lexi.lex"
-{ yylval = strdup(yytext);return GY; }
+#line 113 "lexi.lex"
+{ yylval = strdup(yytext);return SP; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 113 "lexi.lex"
-{yylval = strdup(yytext);return TBS;}
+#line 114 "lexi.lex"
+{ yylval = strdup(yytext);return GY; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 114 "lexi.lex"
-{yylval = strdup(yytext);return TB;}
+#line 115 "lexi.lex"
+{yylval = strdup(yytext);return TBS;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 116 "lexi.lex"
-{yylval = strdup(yytext);return CT;}
+{yylval = strdup(yytext);return TB;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 117 "lexi.lex"
-{yylval = strdup(yytext);return CST;}
+#line 118 "lexi.lex"
+{yylval = strdup(yytext);return CT;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 119 "lexi.lex"
-{yylval = strdup(yytext);return EQ;}
+{yylval = strdup(yytext);return CST;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 120 "lexi.lex"
-{yylval = strdup(yytext);return OPR;}
+#line 121 "lexi.lex"
+{yylval = strdup(yytext);return EQ;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 121 "lexi.lex"
-{yylval = strdup(yytext);return OPR_EN;}
+#line 122 "lexi.lex"
+{yylval = strdup(yytext);return OPR;}
 	YY_BREAK
 case 22:
-YY_RULE_SETUP
-#line 122 "lexi.lex"
-{yylval = strdup(yytext);return OPR_EN;}
-	YY_BREAK
-case 23:
 YY_RULE_SETUP
 #line 123 "lexi.lex"
 {yylval = strdup(yytext);return OPR_EN;}
 	YY_BREAK
-case 24:
+case 23:
 YY_RULE_SETUP
 #line 124 "lexi.lex"
-{ yylval = strdup(yytext);return AS; }
+{yylval = strdup(yytext);return OPR_EN;}
+	YY_BREAK
+case 24:
+YY_RULE_SETUP
+#line 125 "lexi.lex"
+{yylval = strdup(yytext);return OPR_EN;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 125 "lexi.lex"
-{ yylval = strdup(yytext);return WN; }
+#line 126 "lexi.lex"
+{ yylval = strdup(yytext);return AS; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 126 "lexi.lex"
-{ yylval = strdup(yytext);return TN; }
+#line 127 "lexi.lex"
+{ yylval = strdup(yytext);return WN; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 127 "lexi.lex"
-{ yylval = strdup(yytext);return ELSE; }
+#line 128 "lexi.lex"
+{ yylval = strdup(yytext);return TN; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 128 "lexi.lex"
-{ yylval = strdup(yytext);return TP; }
+#line 129 "lexi.lex"
+{ yylval = strdup(yytext);return ELSE; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 129 "lexi.lex"
-{ yylval = strdup(yytext);return BN; }
+#line 130 "lexi.lex"
+{ yylval = strdup(yytext);return TP; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 130 "lexi.lex"
-{ yylval = strdup(yytext);return IN; }
+#line 131 "lexi.lex"
+{ yylval = strdup(yytext);return BN; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 131 "lexi.lex"
-{ yylval = strdup(yytext);return LE; }
+#line 132 "lexi.lex"
+{ yylval = strdup(yytext);return IN; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 132 "lexi.lex"
-{ yylval = strdup(yytext);return JN; }
+#line 133 "lexi.lex"
+{ yylval = strdup(yytext);return LE; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 133 "lexi.lex"
-{ yylval = strdup(yytext);return AT; }
+#line 134 "lexi.lex"
+{ yylval = strdup(yytext);return JN; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 134 "lexi.lex"
-{ yylval = strdup(yytext);return CN; }
+#line 135 "lexi.lex"
+{ yylval = strdup(yytext);return AT; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 135 "lexi.lex"
-{ yylval = strdup(yytext);return AD; }
+#line 136 "lexi.lex"
+{ yylval = strdup(yytext);return CN; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 136 "lexi.lex"
-{ yylval = strdup(yytext);return DP; }
+#line 137 "lexi.lex"
+{ yylval = strdup(yytext);return AD; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 137 "lexi.lex"
-{ yylval = strdup(yytext);return VA; }
+#line 138 "lexi.lex"
+{ yylval = strdup(yytext);return DP; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 138 "lexi.lex"
-{ yylval = strdup(yytext);return UE; }
+#line 139 "lexi.lex"
+{ yylval = strdup(yytext);return VA; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 139 "lexi.lex"
-{ yylval = strdup(yytext);return SET; }
+#line 140 "lexi.lex"
+{ yylval = strdup(yytext);return UE; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 140 "lexi.lex"
-{ yylval = strdup(yytext);return DE; }
+#line 141 "lexi.lex"
+{ yylval = strdup(yytext);return SET; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
 #line 142 "lexi.lex"
-{ yylval = strdup(yytext);return AY; }
+{ yylval = strdup(yytext);return DE; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 143 "lexi.lex"
-{ yylval = strdup(yytext);return AL; }
+#line 144 "lexi.lex"
+{ yylval = strdup(yytext);return AY; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 144 "lexi.lex"
-{ yylval = strdup(yytext);return EX; }
+#line 145 "lexi.lex"
+{ yylval = strdup(yytext);return AL; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 145 "lexi.lex"
-{ yylval = strdup(yytext);return UN; }
+#line 146 "lexi.lex"
+{ yylval = strdup(yytext);return EX; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 146 "lexi.lex"
-{ yylval = strdup(yytext);return EXIT; }
+#line 147 "lexi.lex"
+{ yylval = strdup(yytext);return UN; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 147 "lexi.lex"
-{ yylval = strdup(yytext);return USE; }
+#line 148 "lexi.lex"
+{ yylval = strdup(yytext);return EXIT; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 148 "lexi.lex"
-{ yylval = strdup(yytext);return SW; }
+#line 149 "lexi.lex"
+{ yylval = strdup(yytext);return USE; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 149 "lexi.lex"
-{ yylval = strdup(yytext);return DB; }
+#line 150 "lexi.lex"
+{ yylval = strdup(yytext);return SW; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 150 "lexi.lex"
-{ yylval = strdup(yytext);return NE; }
+#line 151 "lexi.lex"
+{ yylval = strdup(yytext);return DB; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 151 "lexi.lex"
+#line 152 "lexi.lex"
+{ yylval = strdup(yytext);return NE; }
+	YY_BREAK
+case 51:
+YY_RULE_SETUP
+#line 153 "lexi.lex"
 ECHO;
 	YY_BREAK
-#line 1324 "lex.yy.c"
+#line 1329 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2318,7 +2323,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 151 "lexi.lex"
+#line 153 "lexi.lex"
 
 
 int yywrap()

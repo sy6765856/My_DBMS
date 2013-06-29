@@ -27,6 +27,7 @@ int file_length = 0;
 char *start_address = 0;
 char *dbf=NULL;
 int fd;
+char form[LEN][H][M];
 /* void init() */
 /* { */
 /*     fd = open("tes", O_RDONLY ); */
@@ -176,5 +177,56 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)//type is th
         }while(col_pos!=nd.tail_column);
         row_pos=tb_hd.nxt_row;
     }while(row_pos!=file_length);
+    return 1;
+}
+
+int selec(char tb_name[],char in_f[LEN][M],int cpf)
+{
+    printf("%s\n",tb_name);
+    printf("%d\n",cpf);
+    for(i=0;i<cpf;i++)
+    {
+        printf("%s\n",in_f[i]);
+    }
+    if(cpf==1&&strcmp(in_f[0],"*")==0)
+    {
+        
+    }
+    else
+    {
+        int row=0,col=0;
+        TableNode nd;
+        p_TableNode ndr=&nd;
+        strcpy(nd.table.table_name,tb_name);
+        //get(ndr);
+        int row_pos=nd.pos;
+        do
+        {
+            int cl_pos=row_pos;
+            TB tb_hd=*(TB*)(&dat[cl_pos]);
+            int col_pos=nd.head_column;
+            do
+            {
+                TB rc=*(TB*)(&dat[cl_pos]);
+                ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
+                int fg=-1;
+                for(j=0;j<cpf;j++)
+                {
+                    if(strcmp(in_f[j],cnd.table_mode.field_name)==0)
+                    {
+                        fg=j;
+                    }
+                }
+                col_pos=cnd.next_column;
+                cl_pos=rc.nxt_col;
+            }while(col_pos!=nd.tail_column);
+            row_pos=tb_hd.nxt_row;
+        }while(row_pos!=file_length);
+    }
+    return 1;
+}
+
+int aler(int form_pos,int type)
+{
     return 1;
 }

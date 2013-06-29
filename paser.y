@@ -12,7 +12,7 @@ typedef char* string;
  int cp[3];
  int k=0;
 %}
-%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DP TBS VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT USE DB SW EQ
+%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DP TBS VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT USE DB SW EQ SR
 %%
 /* sql statement */
 Sql : Statement | Sql Statement
@@ -35,10 +35,12 @@ show: SW TBS SN{
  }
 /* select */
 select: SP st|st
-st:ST SP NE FM NE SN{
-    printf("YES!\n");
-    printf("%s is %s years old!!!\n", $1, $3);
+st:ST SP col_na FM NE SN
+{
+    selec($5,st[(k+2)%3],cp[(k+2)%3]);
 }
+col_na:col_name{st_init();}
+col_name : SR{st_push($1);}|NE{st_push($1);} |NE CA col_name {st_push($1);}
 
 /* create table */
 create : CT TB NE LP col_def RP SN {
@@ -100,7 +102,8 @@ con:condic|NE{st_push($1);}
 conditio :condition{st_init();}
 
 /* alert */
-alert: AT TB NE aler SN{
+alert: AT TB NE aler SN
+{
     printf ("alert\n");
 }
 aler:add|alc
@@ -111,7 +114,7 @@ alc:AT CN col
 drop: drop_column
 drop_column: DP SN{
     printf ("drop\n");
- }
+}
 
 %%
 int main()

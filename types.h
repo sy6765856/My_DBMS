@@ -1,6 +1,7 @@
 #ifndef VARTYPE_H
 #define VARTYPE_H
 #define LEN 1000
+#define H 30
 #define M 10000
 typedef enum {
     NUL,

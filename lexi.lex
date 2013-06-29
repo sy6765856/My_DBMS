@@ -7,7 +7,7 @@ extern char* yylval;
 exit exit|EXIT
 char [A-Za-z]
 num [0-9]+
-name {char}+|\*
+name {char}+
 space  [ /n/t]
 sp     {space}+
 from   {sp}(FROM|from){sp}
@@ -20,6 +20,7 @@ comma  {space}*,{space}*
 show   (show|SHOW)
 tables {sp}(tables|TABLES){space}*
 commas \'
+star   \*
 use (use|USE)
 database {sp}(database|DATABASE){sp}
 drop (drop|DROP)
@@ -101,6 +102,7 @@ union (union|UNION)
 {type} {yylval=strdup(yytext);return TE;}
 {comma} {yylval=strdup(yytext);return CA;}
 {commas} {yylval=strdup(yytext);return CS;}
+{star} {yylval=strdup(yytext);return SR;}
 {lp} {yylval = strdup(yytext);return LP;}
 {rp} {yylval = strdup(yytext);return RP;}
 {semicolon} {yylval = strdup(yytext);return SN;}

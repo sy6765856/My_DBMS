@@ -45,3 +45,4 @@
 # define DB 301
 # define SW 302
 # define EQ 303
+# define SR 304

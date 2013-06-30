@@ -45,8 +45,12 @@ int error(char err[])
     printf("\e[1;32m");
     return 0;
 }
-char *dat = NULL,*dbf=NULL;  
-int file_length = 0;
+extern char* g_mem_dbf;
+extern char* g_mem_dat;
+#define dat g_mem_dat
+#define dbf g_mem_dbf
+extern struct stat g_dat_fi;
+#define file_length g_dat_fi.st_size
 char col_name[M];
 char form[LEN][H][M];
 int do_int(char a[])

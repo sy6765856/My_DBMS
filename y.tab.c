@@ -699,7 +699,7 @@ break;
 case 51:
 #line 85 "paser.y"
 	{
-    delete(yystack.l_mark[-1],st[(k+2)%3],cp[(k+2)%3]);
+    delet(yystack.l_mark[-1],st[(k+2)%3],cp[(k+2)%3]);
 }
 break;
 case 52:

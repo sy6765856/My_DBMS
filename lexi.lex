@@ -4,53 +4,53 @@
 #include <string.h>
 extern char* yylval;
 %}
-exit exit|EXIT
+exit {space}*(exit|EXIT)
 char [A-Za-z]
 num [0-9]+
 name {char}+
-space  [ /n/t]
-sp     {space}+
-from   {sp}(FROM|from){sp}
-where  {sp}(where|WHERE){sp}
-by     (BY|by)
-gb     (group|GROUP){space}{by}
-lp     {space}*\({space}*
-rp     {space}*\){space}*
-comma  {space}*,{space}*
-show   (show|SHOW)
+space [ \t\n]
+sp {space}+
+from {sp}(FROM|from){sp}
+where {sp}(where|WHERE){sp}
+by (BY|by)
+gb (group|GROUP){space}{by}
+lp {space}*\({space}*
+rp {space}*\){space}*
+comma {space}*,{space}*
+show (show|SHOW)
 tables {sp}(tables|TABLES){space}*
 commas \'
-star   \*
-use (use|USE)
+star \*
+use {space}*(use|USE)
 database {sp}(database|DATABASE){sp}
-drop (drop|DROP)
-semicolon  {space}*;{space}*
+drop {space}*(drop|DROP)
+semicolon {space}*;
 having (having|HAVING)
 ob (ORDER|order){space}{by}
-into     (INTO|into)
-type     (int|INT|char|CHAR|real|REAL)
+into (INTO|into)
+type (int|INT|char|CHAR|real|REAL)
 
 /* table */
 table {sp}(TABLE|table){sp}
-create (CREATE|create)
+create {space}*(CREATE|create)
 
 /* constraint */
-constraint  (CONSTRAINT|constraint)
+constraint (CONSTRAINT|constraint)
 
 /* constraint types */
 null null|NULL|NOT{sp}NULL|not{sp}null
 unique (unique|UNIQUE)
-key   (KEY|key)
+key (KEY|key)
 p_key (PRIMARY|primary){sp}{key}
 f_key (FOREIGN|foreign){sp}{key}
 
 /* op */
-eq   [=]
+eq [=]
 eql {space}*{eq}{space}*
-nt  [!]
+nt [!]
 opr1 [<>]
 opr2 (({opr1}|{nt}){eq})|({nt}{opr1})|([<][>])
-opr  {space}*({opr2}|{opr1}){space}*
+opr {space}*({opr2}|{opr1}){space}*
 
 /* op_en */
 not (not|NOT)
@@ -78,7 +78,7 @@ column {sp}(column|COLUMN){sp}
 add {sp}(ADD|add){sp}
 
 /* insert */
-insert    (INSERT|insert)
+insert (INSERT|insert)
 ins {insert}{sp}{into}{sp}
 values (values|VALUES)
 
@@ -87,7 +87,7 @@ update {space}*(update|UPDATE){space}*
 set {sp}(set|SET){sp}
 
 /* delete */
-delete   (DELETE|delete)
+delete (DELETE|delete)
 
 /* Nested query */
 any (any|ANY)
@@ -155,3 +155,4 @@ int yywrap()
 {
     return 1;
 }
+

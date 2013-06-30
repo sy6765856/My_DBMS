@@ -19,12 +19,14 @@ Sql : Statement | Sql Statement
 Statement : select|insert|delete|update|create|alert|drop|exit|use_db|crt_db|drp_db|show
 exit : EXIT{puts("Exit Successfully!!");return 0;}
 /* database */
-use_db:USE DB NE SN{
+use_db:USE DB NE SN
+{
     use_db($3);
- }
-crt_db:CT DB NE SN{
+}
+crt_db:CT DB NE SN
+{
     crt_db($3);
- }
+}
 
 drp_db:DP DB NE SN{
     drp_db($3);
@@ -43,12 +45,13 @@ col_na:col_name{st_init();}
 col_name : SR{st_push($1);}|NE{st_push($1);} |NE CA col_name {st_push($1);}
 
 /* create table */
-create : CT TB NE LP col_def RP SN {
-    crt_tb();
+create : CT TB NE LP col_deff RP SN {
+    crt_tb($3,st[(k+2)%3],cp[(k+2)%3]);
 }
 
+col_deff :col_def{st_init();}
 col_def: col | col_def CA col
-col: NE SP TE|NE SP TE cl
+col: NE SP TE{st_push($1);st_push($3);}|NE SP TE cl{st_push($1);st_push($3);}
 cl: LP NM RP|SP NL|LP NM RP NL
 
 /* insert */

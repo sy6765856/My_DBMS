@@ -20,7 +20,8 @@ int g_dbf_fd;
 int g_dat_fd;
 struct stat g_dbf_fi;
 struct stat g_dat_fi;
-
+#define dat g_mem_dat
+#define dbf g_mem_dbf
 int create_database(char db_name[])
 {
     FILE *fp;
@@ -67,6 +68,7 @@ int use_database(char db_name[])
 {
     if (check_exist_db(db_name) == FALSE) {
         error(DB_NOT_EXIST, db_name);
+        puts("fdsf");
         return -1;
     }
 
@@ -86,6 +88,7 @@ int use_database(char db_name[])
 
 int show_tables()
 {
+    if(dbf==NULL||dat==NULL)return -1;
     char *tables;
     int i = 0, head;
     p_TableNode table_node;
@@ -101,9 +104,34 @@ int show_tables()
     return 0;
 }
 
-int sv_create_table()
+int sv_create_table(char table_name[],char in_f[LEN][M],int cp)
 {
-};
+    if(dbf==NULL||dat==NULL)return -1;
+    int i;
+    for(i=0;i<cp;i++)
+        printf("%s\n",in_f[i]);
+    Column p[LEN];
+    int ck=0;
+    for(i=0;i<cp;i++)
+    {
+        strcpy(p[i].field_name,in_f[ck]);ck++;
+        if(strcmp(in_f[ck],"char\0")==0)
+        {
+            p[i].type_name=TEXT;
+        }
+        else if(strcmp(in_f[ck],"int\0")==0)
+        {
+             p[i].type_name=INTEGER;
+        }
+        else if(strcmp(in_f[ck],"double\0")==0)
+        {
+             p[i].type_name=REAL;
+        }ck++;
+    }
+    if(create_table(table_name,cp,p)!=-1)puts("Create Successfully!!");
+    return 1;
+}
+
 int create_table(char table_name[], int num_column, p_Column columns)
 {
     int pre_end = g_dbf_fi.st_size;

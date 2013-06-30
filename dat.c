@@ -194,6 +194,7 @@ void n_null(TB_text *a,TB_dou *b,TB_int *c,int type)
 }
 int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
 {
+    if(dat==NULL||dbf==NULL)return error("Please select a database!!");
     if(cpf&&cpf!=cpv)return error("values not match");
 
     /* debug */
@@ -207,7 +208,7 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
     TableNode nd;
     p_TableNode ndr=&nd;
     strcpy(nd.table.table_name,tb_name);
-    //    get(ndr);
+    if(get_columns(&nd,&ndr)==NULL)return error("No such form!!");
     int tb_pos=nd.dat_index;//form head position
     
     /* produce insert_line */
@@ -279,6 +280,7 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
 
 int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)//type is the same
 {
+    if(dat==NULL||dbf==NULL)return error("Please select a database!!");
     printf ("tb:%s\n",tb_name);
     printf ("col:%s\n",col_name);
     printf("%d\n",cpf);
@@ -322,6 +324,7 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)//type is th
 
 int delet(char tb_name[],char cond[LEN][M],int cp)
 {
+    if(dat==NULL||dbf==NULL)return error("Please select a database!!");
     printf ("%s\n",tb_name);
     printf("%d\n",cp);
     for(i=0;i<cp;i++)puts(cond[i]);
@@ -379,6 +382,7 @@ int delet(char tb_name[],char cond[LEN][M],int cp)
 
 int selec(char tb_name[],char in_f[LEN][M],int cpf)
 {
+    if(dat==NULL||dbf==NULL)return error("Please select a database!!");
     printf("%s\n",tb_name);
     printf("%d\n",cpf);
     for(i=0;i<cpf;i++)

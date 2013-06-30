@@ -64,7 +64,7 @@ in_f:in_ff
 }
 
 in_ff:SP|LP i_f RP
-i_f:NE{st_push($1);}|NE CA i_f{st_push($1);}
+i_f:NE{st_push($1);}|i_f CA NE{st_push($3);}
 
 
 in_v:in_vv

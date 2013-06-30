@@ -204,7 +204,7 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
     p_TableNode ndr=&nd;
     strcpy(nd.table.table_name,tb_name);
     //    get(ndr);
-    int tb_pos=nd.pos;//form head position
+    int tb_pos=nd.dat_index;//form head position
     
     /* produce insert_line */
     int col_pos=nd.head_column;
@@ -217,11 +217,11 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
         do
         {
             ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
-            typ=cnd.table_mode.type_name;
+            typ=cnd.column.type_name;
             
             n_rd(&tb_inst,&tb_insd,&tb_insi,typ,tb_pos);
             
-            strcpy(col_name,cnd.table_mode.field_name);
+            strcpy(col_name,cnd.column.field_name);
             int fg=-1;
             for(j=0;j<cpf;j++)
             {
@@ -250,7 +250,7 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
         do
         {
             ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
-            typ=cnd.table_mode.type_name;
+            typ=cnd.column.type_name;
             
             n_rd(&tb_inst,&tb_insd,&tb_insi,typ,tb_pos);
             
@@ -283,7 +283,7 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)//type is th
     TableNode nd;
     strcpy(nd.table.table_name,tb_name);
     //    get(nd);
-    int tb_pos=nd.pos;
+    int tb_pos=nd.dat_index;
     
     TB_text tb_inst;
     TB_dou tb_insd;
@@ -300,10 +300,10 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)//type is th
         {
             TB tb_ins=*(TB*)(&dat[col_pos]);
             ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
-            typ=cnd.table_mode.type_name;
+            typ=cnd.column.type_name;
             n_rd(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
            
-            if(strcmp(col_name,cnd.table_mode.field_name)==0)
+            if(strcmp(col_name,cnd.column.field_name)==0)
             {
                 n_copy(&tb_inst,&tb_insd,&tb_insi,typ,cond[0]);
                 n_wt_one(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
@@ -330,14 +330,15 @@ int delet(char tb_name[],char cond[LEN][M],int cp)
     p_TableNode ndr;
     int typ;
     strcpy(nd.table.table_name,tb_name);
+    //get_columns(&nd, &ndr);
     //ndr = get(tb_name);
-    memcpy(&nd, ndr, sizeof(TableNode));
+    //memcpy(&nd, ndr, sizeof(TableNode));
     if(cp)
     {
         char col_name[M];
         strcpy(col_name,cond[0]);
         
-        int tb_pos=nd.pos;
+        int tb_pos=nd.dat_index;
         int row_pos=tb_pos;
         do
         {
@@ -349,9 +350,9 @@ int delet(char tb_name[],char cond[LEN][M],int cp)
             {
                 TB rc=*(TB*)(&dat[col_pos]);
                 ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
-                typ=cnd.table_mode.type_name;
+                typ=cnd.column.type_name;
                 n_rd(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
-                if(strcmp(col_name,cnd.table_mode.field_name)==0)
+                if(strcmp(col_name,cnd.column.field_name)==0)
                 {
                     fg=1;break;
                 }
@@ -392,7 +393,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
     //get(ndr);
     if(cpf==1&&strcmp(in_f[0],"*")==0)
     {
-        int row_pos=nd.pos;
+        int row_pos=nd.dat_index;
         do
         {
             TB rr=*(TB*)(&dat[row_pos]);
@@ -403,7 +404,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
             {
                 TB tb_ins=*(TB*)(&dat[col_pos]);
                 ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
-                typ=cnd.table_mode.type_name;
+                typ=cnd.column.type_name;
                 n_rd(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
                 
                 n_copy_form(&tb_inst,&tb_insd,&tb_insi,typ,form[row][col]);
@@ -418,7 +419,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
     }
     else
     {
-        int row_pos=nd.pos;
+        int row_pos=nd.dat_index;
         do
         {
             TB rr=*(TB*)(&dat[row_pos]);
@@ -429,12 +430,12 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
             {
                 TB tb_ins=*(TB*)(&dat[cl_pos]);
                 ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
-                typ=cnd.table_mode.type_name;
+                typ=cnd.column.type_name;
                 n_rd(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
                 int fg=-1;
                 for(j=0;j<cpf;j++)
                 {
-                    if(strcmp(in_f[j],cnd.table_mode.field_name)==0)
+                    if(strcmp(in_f[j],cnd.column.field_name)==0)
                     {
                         fg=j;break;
                     }
@@ -457,6 +458,20 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
 
 int aler(int form_pos,int type)
 {
+    TableNode nd;
     
+    TB_text tb_inst;
+    TB_dou tb_insd;
+    TB_int tb_insi;
+    
+    p_TableNode ndr;
+    //get_columns(&nd, &ndr);
+    int row_pos=nd.dat_index;
+    do
+    {
+        TB rr=*(TB*)(&dat[row_pos]);
+        int cl_pos=row_pos;
+        int col_pos=nd.head_column;
+    }while(row_pos!=file_length);
     return 1;
 }

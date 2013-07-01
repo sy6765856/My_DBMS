@@ -8,31 +8,23 @@
 #include <sys/mman.h>
 typedef struct
 {
-    int pre_col;
-    int pre_row;
     int nxt_col;
     int nxt_row;
 }TB;
 typedef struct
 {
-    int pre_col;
-    int pre_row;
     int nxt_col;
     int nxt_row;
     char data[256];
 }TB_text;
 typedef struct
 {
-    int pre_col;
-    int pre_row;
     int nxt_col;
     int nxt_row;
     int data;
 }TB_int;
 typedef struct
 {
-    int pre_col;
-    int pre_row;
     int nxt_col;
     int nxt_row;
     double data;
@@ -64,6 +56,7 @@ int do_int(char a[])
     }
     return ans;
 }
+
 double do_real(char a[])
 {
     double ans=0;
@@ -79,12 +72,14 @@ double do_real(char a[])
     }
     return ans;
 }
+
 void n_rd(TB_text *a,TB_dou *b,TB_int *c,int type,int pos)
 {
     if(type==TEXT)*a=*(TB_text*)(&dat[pos]);
     else if(type==REAL)*b=*(TB_dou*)(&dat[pos]);
     else if(type==INTEGER)*c=*(TB_int*)(&dat[pos]);
 }
+
 void n_wt(TB_text *a,TB_dou *b,TB_int *c,int type)
 {
      if(type==TEXT)
@@ -106,6 +101,7 @@ void n_wt(TB_text *a,TB_dou *b,TB_int *c,int type)
          file_length+=sizeof(*c);
      }
 }
+
 void n_wt_one(TB_text *a,TB_dou *b,TB_int *c,int type,int pos)
 {
     if(type==TEXT)
@@ -121,21 +117,25 @@ void n_wt_one(TB_text *a,TB_dou *b,TB_int *c,int type,int pos)
         *(TB_int*)(&dat[pos])=*c;
     }
 }
+
 void n_row(TB_text *a,TB_dou *b,TB_int *c,int type,int pos)
 {
     if(type==TEXT)a->nxt_row=pos;
     else if(type==REAL)b->nxt_row=pos;
     else if(type==INTEGER)c->nxt_row=pos;
 }
+
 void n_col(TB_text *a,TB_dou *b,TB_int *c,int type)
 {
 }
+
 void n_copy(TB_text *a,TB_dou *b,TB_int *c,int type,char in_v[])
 {
     if(type==TEXT)strcpy(a->data,in_v);
     else if(type==REAL)b->data=do_real(in_v);
     else if(type==INTEGER)c->data=do_int(in_v);
 }
+
 char* int_do(int a,char* p)
 {
     int cp=0;
@@ -153,6 +153,7 @@ char* int_do(int a,char* p)
     *p='\0';
     return p;
 }
+
 void real_do(double a,char* p)
 {
     int aa=(int)a;
@@ -168,6 +169,7 @@ void real_do(double a,char* p)
     }
     *p='\0';
 }
+
 void n_copy_form(TB_text *a,TB_dou *b,TB_int *c,int type,char v_in[])
 {
     char ans[M];
@@ -186,12 +188,14 @@ void n_copy_form(TB_text *a,TB_dou *b,TB_int *c,int type,char v_in[])
         strcpy(v_in,ans);
     }
 }
+
 void n_null(TB_text *a,TB_dou *b,TB_int *c,int type)
 {
     if(type==TEXT)strcpy(a->data,"NULL\0");
     else if(type==REAL)b->data=0.0;
     else if(type==INTEGER)c->data=0;
 }
+
 int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
 {
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
@@ -210,22 +214,22 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
     strcpy(nd.table.table_name,tb_name);
     if(get_columns(&nd,&ndr)==NULL)return error("No such form!!");
     int tb_pos=nd.dat_index;//form head position
-    
     /* produce insert_line */
     int col_pos=nd.head_column;
     int ct=0,typ;
     TB_text tb_inst;
     TB_dou tb_insd;
     TB_int tb_insi;
+    int le=file_length;
     if(cpf)
     {
         do
         {
             ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
             typ=cnd.column.type_name;
-            
+            printf("type: %d %d\n",typ,INTEGER);
             n_rd(&tb_inst,&tb_insd,&tb_insi,typ,tb_pos);
-            
+            //printf("st: %d %d %d\n",tb_insi.nxt_col,tb_insi.nxt_row,tb_insi.data);
             strcpy(col_name,cnd.column.field_name);
             int fg=-1;
             for(j=0;j<cpf;j++)
@@ -236,18 +240,36 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
                     break;
                 }
             }
-            if(~fg)n_copy(&tb_inst,&tb_insd,&tb_insi,typ,in_v[fg]);
+            if(~fg)
+            {
+                n_copy(&tb_inst,&tb_insd,&tb_insi,typ,in_v[fg]);
+                //printf("st: %d %d %d\n",tb_insi.nxt_col,tb_insi.nxt_row,tb_insi.data);
+            }
             else n_null(&tb_inst,&tb_insd,&tb_insi,typ);
             
             if(ct==0)
             {
                 n_row(&tb_inst,&tb_insd,&tb_insi,typ,tb_pos);
-                //do_dbf(file_length);
+                ndr->dat_index=file_length;
                 ct++;
             }
+            //printf("%d\n",file_length);
             n_wt(&tb_inst,&tb_insd,&tb_insi,typ);
+            //printf("%d\n",file_length);
             col_pos=cnd.next_column;
         }while(col_pos!=nd.tail_column);
+        
+        if(nd.dat_index==0)
+        {
+            //puts("^^^^");
+            
+            ColumnNode cnd=*(ColumnNode*)(&dbf[nd.head_column]);
+            typ=cnd.column.type_name;
+            n_rd(&tb_inst,&tb_insd,&tb_insi,typ,le);
+            n_row(&tb_inst,&tb_insd,&tb_insi,typ,0);
+            n_wt_one(&tb_inst,&tb_insd,&tb_insi,typ,le);
+            //printf("st: %d %d %d\n",tb_insi.nxt_col,tb_insi.nxt_row,tb_insi.data);
+        }
     }
     else
     {
@@ -274,6 +296,18 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
             n_wt(&tb_inst,&tb_insd,&tb_insi,typ);
             col_pos=cnd.next_column;
         }while(col_pos!=nd.tail_column);
+        
+        if(nd.dat_index==0)
+        {
+            //puts("^^^^");
+            
+            ColumnNode cnd=*(ColumnNode*)(&dbf[nd.head_column]);
+            typ=cnd.column.type_name;
+            n_rd(&tb_inst,&tb_insd,&tb_insi,typ,le);
+            n_row(&tb_inst,&tb_insd,&tb_insi,typ,0);
+            n_wt_one(&tb_inst,&tb_insd,&tb_insi,typ,le);
+            //printf("st: %d %d %d\n",tb_insi.nxt_col,tb_insi.nxt_row,tb_insi.data);
+        }
     }
     return 1;
 }
@@ -318,7 +352,7 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)//type is th
             cl_pos=tb_ins.nxt_col;
         }while(col_pos!=nd.tail_column);
         row_pos=tb_hd.nxt_row;
-    }while(row_pos!=file_length);
+    }while(row_pos);
     return 1;
 }
 
@@ -371,7 +405,7 @@ int delet(char tb_name[],char cond[LEN][M],int cp)
                 
             }
             row_pos=tb_ins.nxt_row;
-        }while(row_pos!=file_length);
+        }while(row_pos);
     }
     else
     {
@@ -423,7 +457,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
             }while(col_pos!=nd.tail_column);
             row_pos=rr.nxt_row;
             row++;
-        }while(row_pos!=file_length);
+        }while(row_pos);
     }
     else
     {
@@ -458,7 +492,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
             }while(col_pos!=nd.tail_column);
             row_pos=rr.nxt_row;
             row++;
-        }while(row_pos!=file_length);
+        }while(row_pos);
     }
     //show_result(form,row,col);
     return 1;

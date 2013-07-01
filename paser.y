@@ -12,11 +12,11 @@ typedef char* string;
  int cp[3];
  int k=0;
 %}
-%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DP TBS VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT USE DB SW EQ SR
+%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DP TBS VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT USE DB SW EQ SR RE
 %%
 /* sql statement */
 Sql : Statement | Sql Statement
-Statement : select|insert|delete|update|create|alert|drop|exit|use_db|crt_db|drp_db|show
+Statement : select|insert|delete|update|create|alter|drop|exit|use_db|crt_db|drp_db|show|rename
 exit : EXIT{close_db();puts("Exit Successfully!!");return 0;}
 /* database */
 use_db:USE DB NE SN
@@ -31,6 +31,12 @@ crt_db:CT DB NE SN
 drp_db:DP DB NE SN{
     drp_db($3);
  }
+/* rename */
+rename : RE TB NE SP NE SN
+{
+    ren_tb($3,$5);
+}
+
 /* show */
 show: SW TBS SN{
     shw_tb();
@@ -101,14 +107,15 @@ con:condic|NE{st_push($1);}
 
 conditio :condition{st_init();}
 
-/* alert */
-alert: AT TB NE aler SN
+/* alter */
+alter: AT TB NE aler SN
 {
-    printf ("alert\n");
+    // alt_tb($3);
 }
-aler:add|alc
+aler:add{st_init();}|drr{st_init();}
 add:AD col_def
-alc:AT CN col
+drr:DP cll
+cll: NE{st_push($1);} |NE CA cll {st_push($1);}
 
 /* drop */
 drop: drop_column

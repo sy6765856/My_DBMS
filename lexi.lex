@@ -13,6 +13,7 @@ sp {space}+
 from {sp}(FROM|from){sp}
 where {sp}(where|WHERE){sp}
 by (BY|by)
+rename {space}*(rename|RENAME)
 gb (group|GROUP){space}{by}
 lp {space}*\({space}*
 rp {space}*\){space}*
@@ -72,8 +73,8 @@ like (like|LIKE)
 /* join */
 join (join|JOIN)
 
-/* alert */
-alert (alert|ALERT)
+/* alter */
+alter (alter|ALTER)
 column {sp}(column|COLUMN){sp}
 add {sp}(ADD|add){sp}
 
@@ -132,7 +133,7 @@ union (union|UNION)
 {in} { yylval = strdup(yytext);return IN; }
 {like} { yylval = strdup(yytext);return LE; }
 {join} { yylval = strdup(yytext);return JN; }
-{alert} { yylval = strdup(yytext);return AT; }
+{alter} { yylval = strdup(yytext);return AT; }
 {column} { yylval = strdup(yytext);return CN; }
 {add} { yylval = strdup(yytext);return AD; }
 {drop} { yylval = strdup(yytext);return DP; }
@@ -147,6 +148,7 @@ union (union|UNION)
 {union} { yylval = strdup(yytext);return UN; }
 {exit} { yylval = strdup(yytext);return EXIT; }
 {use} { yylval = strdup(yytext);return USE; }
+{rename} { yylval = strdup(yytext);return RE; }
 {show} { yylval = strdup(yytext);return SW; }
 {database} { yylval = strdup(yytext);return DB; }
 {name} { yylval = strdup(yytext);return NE; }

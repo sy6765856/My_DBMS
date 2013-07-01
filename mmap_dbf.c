@@ -306,6 +306,7 @@ int drop_table(char table_name[])
 
 int rename_table(char table_name[], char new_name[])
 {
+    //printf("%s %s\n",table_name,new_name);
     p_TableNode table_node = get_table_node(table_name);
     if (table_node == NULL) {
         error(TABLE_NOT_EXIST, table_name);

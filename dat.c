@@ -102,6 +102,25 @@ void n_wt(TB_text *a,TB_dou *b,TB_int *c,int type)
      }
 }
 
+void n_wt_col(TB_text *a,TB_dou *b,TB_int *c,int type)
+{
+     if(type==TEXT)
+     {
+         *(TB_text*)(&dat[file_length])=*a;
+         file_length+=sizeof(*a);
+     }
+     else if(type==REAL)
+     {
+         *(TB_dou*)(&dat[file_length])=*b;
+         file_length+=sizeof(*b);
+     }
+     else if(type==INTEGER)
+     {
+         *(TB_int*)(&dat[file_length])=*c;
+         file_length+=sizeof(*c);
+     }
+}
+
 void n_wt_one(TB_text *a,TB_dou *b,TB_int *c,int type,int pos)
 {
     if(type==TEXT)
@@ -125,10 +144,6 @@ void n_row(TB_text *a,TB_dou *b,TB_int *c,int type,int pos)
     else if(type==INTEGER)c->nxt_row=pos;
 }
 
-void n_col(TB_text *a,TB_dou *b,TB_int *c,int type)
-{
-}
-
 void n_copy(TB_text *a,TB_dou *b,TB_int *c,int type,char in_v[])
 {
     if(type==TEXT)strcpy(a->data,in_v);
@@ -150,6 +165,7 @@ char* int_do(int a,char* p)
         *p=q[i];
         p++;
     }
+    if(cp==0){*p='0';p++;}
     *p='\0';
     return p;
 }
@@ -357,6 +373,7 @@ int delet(char tb_name[],char cond[LEN][M],int cp)
     printf("%d\n",cp);
     for(i=0;i<cp;i++)puts(cond[i]);
     /* debug */
+    
     TB_text tb_inst;
     TB_dou tb_insd;
     TB_int tb_insi;
@@ -465,15 +482,6 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
             row_pos=rr.nxt_row;
             row++;
         }while(row_pos);
-        
-        /* debug */
-        for(i=0;i<row;i++)
-        {
-            for(j=0;j<3;j++)
-            {
-                printf("%s  ",form[i][j]);
-            }puts("");
-        }
     }
     else
     {
@@ -510,26 +518,84 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
             row++;
         }while(row_pos);
     }
+    /* debug */
+    for(i=0;i<row;i++)
+    {
+        for(j=0;j<col;j++)
+        {
+            printf("%s  ",form[i][j]);
+        }puts("");
+    }
     //show_result(form,row,col);
     return 1;
 }
 
-int aler(int form_pos,int type)
+int alter_add(p_TableNode ndr,int type)
 {
-    TableNode nd;
-    
     TB_text tb_inst;
     TB_dou tb_insd;
     TB_int tb_insi;
     
-    p_TableNode ndr;
-    //get_columns(&nd, &ndr);
+    TableNode nd=*ndr;
+    if(nd.dat_index==0)return 1;
     int row_pos=nd.dat_index;
     do
     {
         TB rr=*(TB*)(&dat[row_pos]);
-        int cl_pos=row_pos;
         int col_pos=nd.head_column;
-    }while(row_pos!=file_length);
+        int cl_pos=row_pos;
+        TB tb_ins;
+        do
+        {
+            tb_ins=*(TB*)(&dat[cl_pos]);
+            ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
+            col_pos=cnd.next_column;
+            if(col_pos==nd.tail_column)break;
+            cl_pos=tb_ins.nxt_col;
+        }while(col_pos!=nd.tail_column);
+        
+        tb_ins.nxt_col=file_length;
+        *(TB*)(&dat[cl_pos])=tb_ins;
+        
+        n_wt_col(&tb_inst,&tb_insd,&tb_insi,type);
+        
+        row_pos=rr.nxt_row;
+    }while(row_pos);
+    return 1;
+}
+
+int alter_dele(p_TableNode ndr,int type,char col_name[])
+{
+    TB_text tb_inst;
+    TB_dou tb_insd;
+    TB_int tb_insi;
+    
+    TableNode nd=*ndr;
+    if(nd.dat_index==0)return 1;
+    int row_pos=nd.dat_index;
+    do
+    {
+        TB rr=*(TB*)(&dat[row_pos]);
+        int col_pos=nd.head_column;
+        int cl_pos=row_pos;
+        int cl_ps=0;
+        TB tb_ins;
+        do
+        {
+            tb_ins=*(TB*)(&dat[cl_pos]);
+            ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
+            if(strcmp(col_name,cnd.column.field_name)==0)
+            {
+                if(cl_ps)
+                {
+                    (*(TB*)(&dat[cl_ps])).nxt_col=tb_ins.nxt_col;
+                }
+            }
+            else cl_ps=cl_pos;
+            col_pos=cnd.next_column;
+            cl_pos=tb_ins.nxt_col;
+        }while(col_pos!=nd.tail_column);
+        row_pos=rr.nxt_row;
+    }while(row_pos);
     return 1;
 }

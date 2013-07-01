@@ -46,3 +46,4 @@
 # define SW 302
 # define EQ 303
 # define SR 304
+# define RE 305

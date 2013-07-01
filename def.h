@@ -6,4 +6,3 @@
 #define alt_tb sv_alter_table
 #define drp_tb drop_table
 #define ren_tb rename_table
-#define add_col sv_add_col

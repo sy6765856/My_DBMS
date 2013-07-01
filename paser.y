@@ -84,7 +84,7 @@ in_vv:NM{st_push($1);}|CS NE CS{st_push($2);}|in_vv CA CS NE CS{st_push($4);} | 
 /* condition */
 condition : NE coo condic{st_push($1);}
 coo: EQ{st_push($1);} | OPR{st_push($1);}
-condic:NM{st_push($1);}|CS NE CS{st_push($2);}
+condic:NM {st_push($1);}|CS NE CS{st_push($2);}
 
 /* delete */
 delete: DE FM NE dell

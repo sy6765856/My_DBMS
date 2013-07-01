@@ -212,6 +212,14 @@ void n_null(TB_text *a,TB_dou *b,TB_int *c,int type)
     else if(type==INTEGER)c->data=0;
 }
 
+void expression()
+{
+}
+
+int judge(TB_text *a,TB_dou *b,TB_int *c,int type,char cond[LEN][M])
+{
+    return 1;
+}
 int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
 {
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
@@ -413,7 +421,10 @@ int delet(char tb_name[],char cond[LEN][M],int cp)
                 if(strcmp(col_name,cnd.column.field_name)==0)
                 {
                     /* judge whether to delete */
-                    fg=0;break;
+                    if(!judge(&tb_inst,&tb_insd,&tb_insi,typ,cond))
+                    {
+                        fg=0;break;
+                    }
                 }
                 col_pos=cnd.next_column;
                 cl_pos=rc.nxt_col;

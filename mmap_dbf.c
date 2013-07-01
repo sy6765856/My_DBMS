@@ -68,7 +68,6 @@ int use_database(char db_name[])
 {
     if (check_exist_db(db_name) == FALSE) {
         error(DB_NOT_EXIST, db_name);
-        puts("fdsf");
         return -1;
     }
 
@@ -83,50 +82,54 @@ int use_database(char db_name[])
     
     strcpy(g_db_name, db_name);
     open_db();
+    puts("$$");
     return 0;
 }
 
 int show_tables()
 {
     if(dbf==NULL||dat==NULL)return -1;
-    char *tables;
+    char tables[1000][256];
     int i = 0, head;
     p_TableNode table_node;
     int num_table = INT(g_mem_dbf[0]);
     head = INT(g_mem_dbf[4]);
-    tables = calloc(TABLE_NAME_LENGTH, num_table);
+    //tables = (char *)calloc(TABLE_NAME_LENGTH, num_table);
     table_node = PTNODE(g_mem_dbf[head]);
     for (; i < num_table; i++) {
-        strcpy(&tables[i], table_node->table.table_name);
+        strcpy(tables[i], table_node->table.table_name);
         table_node = PTNODE(g_mem_dbf[table_node->next_table]);
     }
+    for(i=0;i<num_table;i++)
+    puts(tables[i]);
     //ui_show_tables(tables, num_table);
     return 0;
 }
 
 int sv_create_table(char table_name[],char in_f[LEN][M],int cp)
 {
-    if(dbf==NULL||dat==NULL)return -1;
+    if(dat==NULL||dbf==NULL)return -1;
     int i;
     for(i=0;i<cp;i++)
         printf("%s\n",in_f[i]);
     Column p[LEN];
-    int ck=0;
-    for(i=0;i<cp;i++)
+    int ck=0,h=0;
+    while(ck<cp)
     {
-        strcpy(p[i].field_name,in_f[ck]);ck++;
+        strcpy(p[h].field_name,in_f[ck]);ck++;
+        puts(p[h].field_name);
         if(strcmp(in_f[ck],"char\0")==0)
         {
-            p[i].type_name=TEXT;
+            p[h].type_name=TEXT;
         }
         else if(strcmp(in_f[ck],"int\0")==0)
         {
-             p[i].type_name=INTEGER;
+             p[h].type_name=INTEGER;
         }
         else if(strcmp(in_f[ck],"double\0")==0)
         {
-             p[i].type_name=REAL;
-        }ck++;
+             p[h].type_name=REAL;
+        }ck++;h++;
     }
     if(create_table(table_name,cp,p)!=-1)puts("Create Successfully!!");
     return 1;
@@ -385,15 +388,18 @@ Boolean check_exist_table(char table_name[])
 
 int open_db()
 {
-    open_mmap(&g_dbf_fd, &g_dbf_fi, g_mem_dbf, g_db_name);
-    open_mmap(&g_dat_fd, &g_dat_fi, g_mem_dat, g_db_name);
+    char filename[260];
+    add_dbf_ext(g_db_name, filename);
+    open_mmap(&g_dbf_fd, &g_dbf_fi, &g_mem_dbf, filename);
+    add_dat_ext(g_db_name, filename);
+    open_mmap(&g_dat_fd, &g_dat_fi, &g_mem_dat, filename);
     return 0;
 }
 
 int close_db()
 {
     close_mmap(g_dbf_fd, g_dbf_fi.st_size, g_mem_dbf);
-    close_mmap(g_dat_fd, g_dbf_fi.st_size, g_mem_dat);
+    close_mmap(g_dat_fd, g_dat_fi.st_size, g_mem_dat);
     return 0;
 }
 
@@ -405,12 +411,11 @@ int close_mmap(int fd, int size, char *membuf)
     return 0;
 }
 
-int open_mmap(int *fd, struct stat *fi, char *membuf, char db_name[])
+int open_mmap(int *fd, struct stat *fi, char **membuf, char filename[])
 {
-    char db_file_name[260];
-    *fd = open(add_dbf_ext(db_name, db_file_name), O_RDWR);
+    *fd = open(filename, O_RDWR);
     fstat(*fd, fi);
-    g_mem_dbf = mmap(NULL, fi->st_size, PROT_READ|PROT_WRITE, MAP_SHARED, *fd, 0);
+    *membuf = mmap(NULL, fi->st_size, PROT_READ|PROT_WRITE, MAP_SHARED, *fd, 0);
     return 0;
 }
 
@@ -427,15 +432,38 @@ char *add_dat_ext(char db_name[], char db_file_name[])
 int safe_add_space(int size)
 {
     int page_size = getpagesize();
+    char filename[260];
     int pages = (size + g_dbf_fi.st_size % page_size) / page_size;
     if (pages) {
-        munmap(g_mem_dbf, g_dbf_fi.st_size);
         ftruncate(g_dbf_fd, g_dbf_fi.st_size+size);
         close(g_dbf_fd);
-        open_mmap(&g_dbf_fd, &g_dbf_fi, g_mem_dbf, g_db_name);
+        munmap(g_mem_dbf, g_dbf_fi.st_size+size);
+        g_dbf_fd = open(filename, O_RDWR);
+        open_mmap(&g_dbf_fd, &g_dbf_fi, &g_mem_dbf, (char *)add_dbf_ext(g_db_name, filename));
     }
     else {
         g_dbf_fi.st_size += size;
     }
     return 0;
 }
+int safe_add_dat_space(int size)
+{
+    int page_size = getpagesize();
+    char filename[260];
+    int pages = (size + g_dat_fi.st_size % page_size) / page_size;
+    if (pages) {
+        ftruncate(g_dat_fd, g_dat_fi.st_size+size);
+        close(g_dat_fd);
+        munmap(g_mem_dat, g_dat_fi.st_size+size);
+        g_dat_fd = open(filename, O_RDWR);
+        open_mmap(&g_dat_fd, &g_dat_fi, &g_mem_dat, (char *)add_dat_ext(g_db_name, filename));
+    }
+    else
+    {
+        g_dat_fi.st_size += size;
+
+     }
+
+     return 0;
+
+ }

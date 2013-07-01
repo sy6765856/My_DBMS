@@ -583,7 +583,7 @@ yyreduce:
     {
 case 15:
 #line 20 "paser.y"
-	{puts("Exit Successfully!!");return 0;}
+	{close_db();puts("Exit Successfully!!");return 0;}
 break;
 case 16:
 #line 23 "paser.y"

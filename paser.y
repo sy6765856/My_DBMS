@@ -17,7 +17,7 @@ typedef char* string;
 /* sql statement */
 Sql : Statement | Sql Statement
 Statement : select|insert|delete|update|create|alert|drop|exit|use_db|crt_db|drp_db|show
-exit : EXIT{puts("Exit Successfully!!");return 0;}
+exit : EXIT{close_db();puts("Exit Successfully!!");return 0;}
 /* database */
 use_db:USE DB NE SN
 {

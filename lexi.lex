@@ -17,7 +17,7 @@ gb (group|GROUP){space}{by}
 lp {space}*\({space}*
 rp {space}*\){space}*
 comma {space}*,{space}*
-show (show|SHOW)
+show {space}*(show|SHOW)
 tables {sp}(tables|TABLES){space}*
 commas \'
 star \*
@@ -78,7 +78,7 @@ column {sp}(column|COLUMN){sp}
 add {sp}(ADD|add){sp}
 
 /* insert */
-insert (INSERT|insert)
+insert {space}*(INSERT|insert)
 ins {insert}{sp}{into}{sp}
 values (values|VALUES)
 

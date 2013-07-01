@@ -90,10 +90,10 @@ p_Column get_columns(p_TableNode table_node, p_TableNode *tp);
 int open_db();
 int close_db();
 int close_mmap(int fd, int size, char *membuf);
-int open_mmap(int *fd, struct stat *fi, char *membuf, char db_name[]);
+int open_mmap(int *fd, struct stat *fi, char **membuf, char db_name[]);
 
 char *add_dbf_ext(char db_name[], char db_file_name[]);
 char *add_dat_ext(char db_name[], char db_file_name[]);
 int safe_add_space(int size);
-
+int safe_add_dat_space(int size);
 #endif

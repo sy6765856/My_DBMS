@@ -1,0 +1,14 @@
+create database fdfd;
+use database fdfd;
+show tables;
+create table fdf(ff int);
+show tables;
+create table dfd(ff int);
+show tables;
+create table dse(ff int, f real ,f real);
+show tables;
+create table ff(ff real,ff int ,fdss char);
+show tables;
+create table reuye(ff real,ff int ,fdss char);
+show tables;
+exit;

@@ -202,19 +202,18 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
     if(cpf&&cpf!=cpv)return error("values not match");
 
     /* debug */
-    printf ("%s\n",tb_name);
-    printf ("%d %d\n",cpf,cpv);
-    for(i=0;i<cpv;i++)puts(in_f[i]);
-    for(i=0;i<cpv;i++)puts(in_v[i]);
+    /* printf ("%s\n",tb_name); */
+    /* printf ("%d %d\n",cpf,cpv); */
+    /* for(i=0;i<cpv;i++)puts(in_f[i]); */
+    /* for(i=0;i<cpv;i++)puts(in_v[i]); */
     /* end */
     
-    /* get the absolute position in dat file */
     TableNode nd;
     p_TableNode ndr=&nd;
     strcpy(nd.table.table_name,tb_name);
     if(get_columns(&nd,&ndr)==NULL)return error("No such form!!");
     int tb_pos=nd.dat_index;//form head position
-    /* produce insert_line */
+    
     int col_pos=nd.head_column;
     int ct=0,typ;
     TB_text tb_inst;
@@ -229,7 +228,7 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
             typ=cnd.column.type_name;
             printf("type: %d %d\n",typ,INTEGER);
             n_rd(&tb_inst,&tb_insd,&tb_insi,typ,tb_pos);
-            //printf("st: %d %d %d\n",tb_insi.nxt_col,tb_insi.nxt_row,tb_insi.data);
+            
             strcpy(col_name,cnd.column.field_name);
             int fg=-1;
             for(j=0;j<cpf;j++)
@@ -243,7 +242,7 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
             if(~fg)
             {
                 n_copy(&tb_inst,&tb_insd,&tb_insi,typ,in_v[fg]);
-                //printf("st: %d %d %d\n",tb_insi.nxt_col,tb_insi.nxt_row,tb_insi.data);
+                
             }
             else n_null(&tb_inst,&tb_insd,&tb_insi,typ);
             
@@ -253,22 +252,17 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
                 ndr->dat_index=file_length;
                 ct++;
             }
-            //printf("%d\n",file_length);
             n_wt(&tb_inst,&tb_insd,&tb_insi,typ);
-            //printf("%d\n",file_length);
             col_pos=cnd.next_column;
         }while(col_pos!=nd.tail_column);
         
         if(nd.dat_index==0)
         {
-            //puts("^^^^");
-            
             ColumnNode cnd=*(ColumnNode*)(&dbf[nd.head_column]);
             typ=cnd.column.type_name;
             n_rd(&tb_inst,&tb_insd,&tb_insi,typ,le);
             n_row(&tb_inst,&tb_insd,&tb_insi,typ,0);
             n_wt_one(&tb_inst,&tb_insd,&tb_insi,typ,le);
-            //printf("st: %d %d %d\n",tb_insi.nxt_col,tb_insi.nxt_row,tb_insi.data);
         }
     }
     else
@@ -278,9 +272,7 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
         {
             ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
             typ=cnd.column.type_name;
-            
             n_rd(&tb_inst,&tb_insd,&tb_insi,typ,tb_pos);
-            
             if(rep<cpv)
             {
                 n_copy(&tb_inst,&tb_insd,&tb_insi,typ,in_v[rep]);
@@ -290,7 +282,7 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
             if(ct==0)
             {
                 n_row(&tb_inst,&tb_insd,&tb_insi,typ,tb_pos);
-                //do_dbf(file_length);
+                ndr->dat_index=file_length;
                 ct++;
             }
             n_wt(&tb_inst,&tb_insd,&tb_insi,typ);
@@ -299,14 +291,11 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
         
         if(nd.dat_index==0)
         {
-            //puts("^^^^");
-            
             ColumnNode cnd=*(ColumnNode*)(&dbf[nd.head_column]);
             typ=cnd.column.type_name;
             n_rd(&tb_inst,&tb_insd,&tb_insi,typ,le);
             n_row(&tb_inst,&tb_insd,&tb_insi,typ,0);
             n_wt_one(&tb_inst,&tb_insd,&tb_insi,typ,le);
-            //printf("st: %d %d %d\n",tb_insi.nxt_col,tb_insi.nxt_row,tb_insi.data);
         }
     }
     return 1;
@@ -363,9 +352,11 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)//type is th
 int delet(char tb_name[],char cond[LEN][M],int cp)
 {
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
+    /* debug */
     printf ("%s\n",tb_name);
     printf("%d\n",cp);
     for(i=0;i<cp;i++)puts(cond[i]);
+    /* debug */
     TB_text tb_inst;
     TB_dou tb_insd;
     TB_int tb_insi;
@@ -382,38 +373,50 @@ int delet(char tb_name[],char cond[LEN][M],int cp)
     {
         char col_name[M];
         strcpy(col_name,cond[0]);
-        
         int tb_pos=nd.dat_index;
         int row_pos=tb_pos;
+        int row_ps=0;
         do
         {
+            TB tb_pre;
+            if(row_ps)
+            {
+                tb_pre=*(TB*)(&dat[row_ps]);
+            }
+            TB tb_ins=*(TB*)(&dat[row_pos]);
             int cl_pos=row_pos;
             int col_pos=nd.head_column;
-            TB tb_ins=*(TB*)(&dat[col_pos]);
-            int fg=0;
+            int fg=1;
             do
             {
-                TB rc=*(TB*)(&dat[col_pos]);
+                TB rc=*(TB*)(&dat[cl_pos]);
                 ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
                 typ=cnd.column.type_name;
                 n_rd(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
                 if(strcmp(col_name,cnd.column.field_name)==0)
                 {
-                    fg=1;break;
+                    /* judge whether to delete */
+                    fg=0;break;
                 }
                 col_pos=cnd.next_column;
                 cl_pos=rc.nxt_col;
             }while(col_pos!=nd.tail_column);
             if(fg)
             {
-                
+                if(row_ps)
+                {
+                    tb_pre.nxt_row=tb_ins.nxt_row;
+                    *(TB*)(&dat[row_ps])=tb_pre;
+                }
+                else ndr->dat_index=tb_ins.nxt_row;
             }
+            else row_ps=row_pos;
             row_pos=tb_ins.nxt_row;
         }while(row_pos);
     }
     else
     {
-        //do_dbf(file_length);
+        ndr->dat_index=0;
     }
     return 1;
 }
@@ -462,14 +465,14 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
             row_pos=rr.nxt_row;
             row++;
         }while(row_pos);
-        int j;
+        
+        /* debug */
         for(i=0;i<row;i++)
         {
             for(j=0;j<3;j++)
             {
                 printf("%s  ",form[i][j]);
-            }
-            puts("");
+            }puts("");
         }
     }
     else

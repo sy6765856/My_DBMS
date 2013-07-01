@@ -351,7 +351,7 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 123 "paser.y"
+#line 120 "paser.y"
 int main()
 {
     memset(cp,0,sizeof(cp));
@@ -656,101 +656,101 @@ case 36:
 }
 break;
 case 37:
-#line 65 "paser.y"
+#line 64 "paser.y"
 	{
     st_init();
 }
 break;
 case 40:
-#line 70 "paser.y"
+#line 69 "paser.y"
 	{st_push(yystack.l_mark[0]);}
 break;
 case 41:
-#line 70 "paser.y"
+#line 69 "paser.y"
 	{st_push(yystack.l_mark[0]);}
 break;
 case 42:
-#line 74 "paser.y"
+#line 72 "paser.y"
 	{
     st_init();
 }
 break;
 case 43:
-#line 78 "paser.y"
+#line 76 "paser.y"
 	{st_push(yystack.l_mark[0]);}
 break;
 case 44:
-#line 78 "paser.y"
+#line 76 "paser.y"
 	{st_push(yystack.l_mark[-1]);}
 break;
 case 45:
-#line 78 "paser.y"
+#line 76 "paser.y"
 	{st_push(yystack.l_mark[-1]);}
 break;
 case 46:
-#line 78 "paser.y"
+#line 76 "paser.y"
 	{st_push(yystack.l_mark[0]);}
 break;
 case 47:
-#line 82 "paser.y"
+#line 79 "paser.y"
 	{st_push(yystack.l_mark[-2]);}
 break;
 case 48:
-#line 83 "paser.y"
+#line 80 "paser.y"
 	{st_push(yystack.l_mark[0]);}
 break;
 case 49:
-#line 83 "paser.y"
+#line 80 "paser.y"
 	{st_push(yystack.l_mark[0]);}
 break;
 case 50:
-#line 84 "paser.y"
+#line 81 "paser.y"
 	{st_push(yystack.l_mark[0]);}
 break;
 case 51:
-#line 84 "paser.y"
+#line 81 "paser.y"
 	{st_push(yystack.l_mark[-1]);}
 break;
 case 52:
-#line 88 "paser.y"
+#line 85 "paser.y"
 	{
     delet(yystack.l_mark[-1],st[(k+2)%3],cp[(k+2)%3]);
 }
 break;
 case 53:
-#line 91 "paser.y"
+#line 88 "paser.y"
 	{st_init();}
 break;
 case 56:
-#line 96 "paser.y"
+#line 93 "paser.y"
 	{
     update(yystack.l_mark[-5],yystack.l_mark[-3],st[(k+2)%3],cp[(k+2)%3]);
 }
 break;
 case 59:
-#line 101 "paser.y"
+#line 98 "paser.y"
 	{st_init();}
 break;
 case 60:
-#line 102 "paser.y"
+#line 99 "paser.y"
 	{st_push(yystack.l_mark[-1]);}
 break;
 case 63:
-#line 103 "paser.y"
+#line 100 "paser.y"
 	{st_push(yystack.l_mark[0]);}
 break;
 case 64:
-#line 105 "paser.y"
+#line 102 "paser.y"
 	{st_init();}
 break;
 case 65:
-#line 109 "paser.y"
+#line 106 "paser.y"
 	{
     printf ("alert\n");
 }
 break;
 case 71:
-#line 118 "paser.y"
+#line 115 "paser.y"
 	{
     printf ("drop\n");
 }

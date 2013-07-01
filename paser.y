@@ -60,7 +60,6 @@ insert: IT NE in_f VA LP in_v RP SN
     insert($2,st[(k+1)%3],cp[(k+1)%3],st[(k+2)%3],cp[(k+2)%3]);
 }
 
-
 in_f:in_ff
 {
     st_init();
@@ -69,14 +68,12 @@ in_f:in_ff
 in_ff:SP|LP i_f RP
 i_f:NE{st_push($1);}|i_f CA NE{st_push($3);}
 
-
 in_v:in_vv
 {
     st_init();
 }
 
 in_vv:NM{st_push($1);}|CS NE CS{st_push($2);}|in_vv CA CS NE CS{st_push($4);} | in_vv CA NM{st_push($3);}
-
 
 /* condition */
 condition : NE coo condic{st_push($1);}

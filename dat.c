@@ -319,12 +319,15 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)//type is th
     printf ("col:%s\n",col_name);
     printf("%d\n",cpf);
     for(i=0;i<cpf;i++)puts(cond[i]);
-
-    TableNode nd;
-    strcpy(nd.table.table_name,tb_name);
-    //    get(nd);
-    int tb_pos=nd.dat_index;
     
+    TableNode nd;
+    p_TableNode ndr=&nd;
+    strcpy(nd.table.table_name,tb_name);
+    if(get_columns(&nd,&ndr)==NULL)return error("No such form!!");
+
+    if(nd.dat_index==0)return error("This form is empty!!");
+    
+    int tb_pos=nd.dat_index;
     TB_text tb_inst;
     TB_dou tb_insd;
     TB_int tb_insi;
@@ -352,6 +355,7 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)//type is th
             cl_pos=tb_ins.nxt_col;
         }while(col_pos!=nd.tail_column);
         row_pos=tb_hd.nxt_row;
+        puts("%%");
     }while(row_pos);
     return 1;
 }

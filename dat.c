@@ -145,7 +145,7 @@ char* int_do(int a,char* p)
         q[cp++]=a%10+'0';
         a/=10;
     }
-    for(i=0;i<cp;i++)
+    for(i=cp-1;i>=0;i--)
     {
         *p=q[i];
         p++;
@@ -366,18 +366,18 @@ int delet(char tb_name[],char cond[LEN][M],int cp)
     printf ("%s\n",tb_name);
     printf("%d\n",cp);
     for(i=0;i<cp;i++)puts(cond[i]);
-    TableNode nd;
-    
     TB_text tb_inst;
     TB_dou tb_insd;
     TB_int tb_insi;
-    
-    p_TableNode ndr;
     int typ;
+    
+    TableNode nd;
+    p_TableNode ndr=&nd;
     strcpy(nd.table.table_name,tb_name);
-    //get_columns(&nd, &ndr);
-    //ndr = get(tb_name);
-    //memcpy(&nd, ndr, sizeof(TableNode));
+    if(get_columns(&nd,&ndr)==NULL)return error("No such form!!");
+
+    if(nd.dat_index==0)return error("This form is empty!!");
+    
     if(cp)
     {
         char col_name[M];
@@ -423,21 +423,21 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
     printf("%s\n",tb_name);
     printf("%d\n",cpf);
-    for(i=0;i<cpf;i++)
-    {
-        printf("%s\n",in_f[i]);
-    }
+    for(i=0;i<cpf;i++){printf("%s\n",in_f[i]);}
     int row=0,col=0,typ;
-    TableNode nd;
 
     TB_text tb_inst;
     TB_dou tb_insd;
     TB_int tb_insi;
-    
+
+    TableNode nd;
     p_TableNode ndr=&nd;
     strcpy(nd.table.table_name,tb_name);
-    //get(ndr);
-    if(cpf==1&&strcmp(in_f[0],"*")==0)
+    if(get_columns(&nd,&ndr)==NULL)return error("No such form!!");
+
+    if(nd.dat_index==0)return error("This form is empty!!");
+    printf("%d\n",nd.dat_index);
+    if(cpf==1&&strcmp(in_f[0],"*\0")==0)
     {
         int row_pos=nd.dat_index;
         do
@@ -448,7 +448,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
             col=0;
             do
             {
-                TB tb_ins=*(TB*)(&dat[col_pos]);
+                TB tb_ins=*(TB*)(&dat[cl_pos]);
                 ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
                 typ=cnd.column.type_name;
                 n_rd(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
@@ -462,6 +462,15 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
             row_pos=rr.nxt_row;
             row++;
         }while(row_pos);
+        int j;
+        for(i=0;i<row;i++)
+        {
+            for(j=0;j<3;j++)
+            {
+                printf("%s  ",form[i][j]);
+            }
+            puts("");
+        }
     }
     else
     {

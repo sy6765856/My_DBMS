@@ -223,7 +223,34 @@ int jud(TB_text *a,TB_dou *b,TB_int *c,int type,char op[],char va[])
 {
     if(type==TEXT)
     {
-        
+        char left[M],right[M];
+        strcpy(left,a->data);
+        strcpy(right,va);
+        if(strcmp(op,"=\0")==0)
+        {
+            if(strcmp(left,right)==0)return 1;
+            else return 0;
+        }
+        else if(strcmp(op,">\0")==0)
+        {
+            if(strcmp(left,right)>0)return 1;
+            else return 0;
+        }
+        else if(strcmp(op,"<\0")==0)
+        {
+            if(strcmp(left,right)<0)return 1;
+            else return 0;
+        }
+        else if(strcmp(op,">=\0")==0)
+        {
+            if(strcmp(left,right)>=0)return 1;
+            else return 0;
+        }
+        else if(strcmp(op,"<=\0")==0)
+        {
+            if(strcmp(left,right)<=0)return 1;
+            else return 0;
+        }
     }
     else if(type==REAL)
     {
@@ -398,11 +425,11 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
 
 int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf,char codd[LEN][M],int cpd)
 {
-    for(i=0;i<cpf;i++)
-        printf("%s\n",cond[i]);
-    puts("");
-    for(i=0;i<cpd;i++)
-        printf("%s\n",codd[i]);
+    /* for(i=0;i<cpf;i++) */
+    /*     printf("%s\n",cond[i]); */
+    /* puts(""); */
+    /* for(i=0;i<cpd;i++) */
+    /*     printf("%s\n",codd[i]); */
     /* return 1; */
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
     TableNode nd;

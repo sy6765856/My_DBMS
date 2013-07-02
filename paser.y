@@ -55,7 +55,7 @@ col_na:col_name{st_init();}
 col_name : SR{st_push($1);}|NE{st_push($1);} |NE CA col_name {st_push($1);}
 
 sell:sel{st_init();}
-sel:SN|WE condition SN
+sel:SN|WE condition SN{st_push("exp\0");}|WE NE coo NE SN{st_push($4);st_push($2);st_push("name\0");}
 
 /* create table */
 create : CT TB NE LP col_deff RP SN {

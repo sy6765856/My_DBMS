@@ -261,6 +261,7 @@ int jud(TB_text *a,TB_dou *b,TB_int *c,int type,char op[],char va[])
     }
     return 1;
 }
+
 int judge(TB_text *a,TB_dou *b,TB_int *c,int type,char cond[LEN][M],int cp)
 {
     if(strcmp(cond[cp-1],"exp\0")==0)
@@ -271,6 +272,31 @@ int judge(TB_text *a,TB_dou *b,TB_int *c,int type,char cond[LEN][M],int cp)
     {
         
     }
+    return 1;
+}
+
+int check_row(int col_pos,int cl_pos,int type,char cond[LEN][M],int cp,int end)
+{
+    TB_text tb_inst;
+    TB_dou tb_insd;
+    TB_int tb_insi;
+    do
+    {
+        TB tb_ins=*(TB*)(&dat[cl_pos]);
+        ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
+        type=cnd.column.type_name;
+        n_rd(&tb_inst,&tb_insd,&tb_insi,type,cl_pos);
+                
+        if(strcmp(col_name,cnd.column.field_name)==0)
+        {
+            if(!judge(&tb_inst,&tb_insd,&tb_insi,type,cond,cp))
+            {
+                return 0;
+            }
+        }
+        col_pos=cnd.next_column;
+        cl_pos=tb_ins.nxt_col;
+    }while(col_pos!=end);
     return 1;
 }
 
@@ -423,10 +449,6 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)
 int delet(char tb_name[],char cond[LEN][M],int cp)
 {
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
-    /* printf("\e[1;30m"); */
-    /* for(i=0;i<cp;i++)puts(cond[i]); */
-    /* printf("%d\n",cp); */
-    /* printf("\e[0m"); */
     
     TB_text tb_inst;
     TB_dou tb_insd;
@@ -500,11 +522,11 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
 {
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
     int row=0,col=0,typ;
-    for(i=0;i<cpf;i++)
-        puts(in_f[i]);
-    puts("");
-    for(i=0;i<cpd;i++)
-        puts(cond[i]);
+    /* for(i=0;i<cpf;i++) */
+    /*     puts(in_f[i]); */
+    /* puts(""); */
+    /* for(i=0;i<cpd;i++) */
+    /*     puts(cond[i]); */
     TB_text tb_inst;
     TB_dou tb_insd;
     TB_int tb_insi;
@@ -515,7 +537,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
     if(get_columns(&nd,&ndr)==NULL)return error("No such form!!");
 
     if(nd.dat_index==0)return error("This form is empty!!");
-        
+    if(cpd)strcpy(col_name,cond[cpd-2]);
     if(cpf==1&&strcmp(in_f[0],"*\0")==0)
     {
         int ctt=0,cl=nd.head_column;
@@ -526,29 +548,35 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
             col++;cl=cnd.next_column;
         }while(cl!=nd.tail_column);
         row++;
-    
+        
         int row_pos=nd.dat_index;
+        int coll=0;
         do
         {
             TB rr=*(TB*)(&dat[row_pos]);
             int cl_pos=row_pos;
             int col_pos=nd.head_column;
-            col=0;
-            do
+            int fg=1;
+            if(cpd)fg=check_row(col_pos,cl_pos,typ,cond,cpd,nd.tail_column);
+            if(fg)
             {
-                TB tb_ins=*(TB*)(&dat[cl_pos]);
-                ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
-                typ=cnd.column.type_name;
-                n_rd(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
-                
-                n_copy_form(&tb_inst,&tb_insd,&tb_insi,typ,form[row][col]);
-                
-                col++;
-                col_pos=cnd.next_column;
-                cl_pos=tb_ins.nxt_col;
-            }while(col_pos!=nd.tail_column);
+                cl_pos=row_pos;
+                col_pos=nd.head_column;
+                col=0;
+                do
+                {
+                    TB tb_ins=*(TB*)(&dat[cl_pos]);
+                    ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
+                    typ=cnd.column.type_name;
+                    n_rd(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
+                    n_copy_form(&tb_inst,&tb_insd,&tb_insi,typ,form[row][col]);
+                    col++;
+                    col_pos=cnd.next_column;
+                    cl_pos=tb_ins.nxt_col;
+                }while(col_pos!=nd.tail_column);
+                row++;
+            }
             row_pos=rr.nxt_row;
-            row++;
         }while(row_pos);
     }
     else
@@ -579,31 +607,38 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
             TB rr=*(TB*)(&dat[row_pos]);
             int cl_pos=row_pos;
             int col_pos=nd.head_column;
-            col=0;
-            do
+            int fh=1;
+            if(cpd)fh=check_row(col_pos,cl_pos,typ,cond,cpd,nd.tail_column);
+            if(fh)
             {
-                TB tb_ins=*(TB*)(&dat[cl_pos]);
-                ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
-                typ=cnd.column.type_name;
-                n_rd(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
-                int fg=-1;
-                for(j=0;j<cpf;j++)
+                cl_pos=row_pos;
+                col_pos=nd.head_column;
+                col=0;
+                do
                 {
-                    if(strcmp(in_f[j],cnd.column.field_name)==0)
+                    TB tb_ins=*(TB*)(&dat[cl_pos]);
+                    ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
+                    typ=cnd.column.type_name;
+                    n_rd(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
+                    int fg=-1;
+                    for(j=0;j<cpf;j++)
                     {
-                        fg=j;break;
+                        if(strcmp(in_f[j],cnd.column.field_name)==0)
+                        {
+                            fg=j;break;
+                        }
                     }
-                }
-                if(~fg)
-                {
-                    n_copy_form(&tb_inst,&tb_insd,&tb_insi,typ,form[row][col]);
-                    col++;
-                }
-                col_pos=cnd.next_column;
-                cl_pos=tb_ins.nxt_col;
-            }while(col_pos!=nd.tail_column);
+                    if(~fg)
+                    {
+                        n_copy_form(&tb_inst,&tb_insd,&tb_insi,typ,form[row][col]);
+                        col++;
+                    }
+                    col_pos=cnd.next_column;
+                    cl_pos=tb_ins.nxt_col;
+                }while(col_pos!=nd.tail_column);
+                row++;
+            }
             row_pos=rr.nxt_row;
-            row++;
         }while(row_pos);
     }
     /* debug */

@@ -59,7 +59,7 @@ and (and|AND)
 or (or|OR)
 
 /* select */
-select (SELECT|select)
+select {space}*(SELECT|select)
 as (as|AS)
 when (when|WHEN)
 then (then|THEN)
@@ -74,7 +74,7 @@ like (like|LIKE)
 join (join|JOIN)
 
 /* alter */
-alter (alter|ALTER)
+alter {space}*(alter|ALTER)
 column {sp}(column|COLUMN){sp}
 add {sp}(ADD|add){sp}
 
@@ -96,7 +96,7 @@ all (all|ALL)
 exists (exists|EXISTS)
 
 /* union */
-union (union|UNION)
+union {space}*(union|UNION)
 %%
 {null} {yylval=strdup(yytext);return NL;}
 {num} {yylval=strdup(yytext);return NM;}

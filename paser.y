@@ -41,14 +41,21 @@ rename : RE TB NE SP NE SN
 show: SW TBS SN{
     shw_tb();
  }
+/* condition */
+condition : NE coo condic{st_push($1);}
+coo: EQ{st_push($1);} | OPR{st_push($1);}
+condic:NM {st_push($1);}|CS NE CS{st_push($2);}
+
 /* select */
-select: SP st|st
-st:ST SP col_na FM NE SN
+select:ST SP col_na FM NE sell
 {
-    selec($5,st[(k+2)%3],cp[(k+2)%3]);
+    selec($5,st[(k+1)%3],cp[(k+1)%3],st[(k+2)%3],cp[(k+2)%3]);
 }
 col_na:col_name{st_init();}
 col_name : SR{st_push($1);}|NE{st_push($1);} |NE CA col_name {st_push($1);}
+
+sell:sel{st_init();}
+sel:SN|WE condition SN
 
 /* create table */
 create : CT TB NE LP col_deff RP SN {
@@ -81,10 +88,6 @@ in_v:in_vv
 
 in_vv:NM{st_push($1);}|CS NE CS{st_push($2);}|in_vv CA CS NE CS{st_push($4);} | in_vv CA NM{st_push($3);}
 
-/* condition */
-condition : NE coo condic{st_push($1);}
-coo: EQ{st_push($1);} | OPR{st_push($1);}
-condic:NM {st_push($1);}|CS NE CS{st_push($2);}
 
 /* delete */
 delete: DE FM NE dell
@@ -92,7 +95,7 @@ delete: DE FM NE dell
     delet($3,st[(k+2)%3],cp[(k+2)%3]);
 }
 dell:del{st_init();}
-del:SN|WE condition SN
+del:SN|WE condition SN{st_push("exp\0");}|WE NE coo NE SN{st_push($4);st_push($2);st_push("name\0");} 
 
 /* update */
 update: UE NE SET NE EQ exp SN

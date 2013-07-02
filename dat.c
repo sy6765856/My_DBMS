@@ -219,7 +219,7 @@ void expression()
     
 }
 
-int judge(TB_text *a,TB_dou *b,TB_int *c,int type,char cond[LEN][M])
+int jud(TB_text *a,TB_dou *b,TB_int *c,int type,char op[],char va[])
 {
     if(type==TEXT)
     {
@@ -230,6 +230,44 @@ int judge(TB_text *a,TB_dou *b,TB_int *c,int type,char cond[LEN][M])
         
     }
     else if(type==INTEGER)
+    {
+        int left=c->data;
+        int right=do_int(va);
+        if(strcmp(op,"=\0")==0)
+        {
+            if(left==right)return 1;
+            else return 0;
+        }
+        else if(strcmp(op,">\0")==0)
+        {
+            if(left>right)return 1;
+            else return 0;
+        }
+        else if(strcmp(op,"<\0")==0)
+        {
+            if(left<right)return 1;
+            else return 0;
+        }
+        else if(strcmp(op,">=\0")==0)
+        {
+            if(left>=right)return 1;
+            else return 0;
+        }
+        else if(strcmp(op,"<=\0")==0)
+        {
+            if(left<=right)return 1;
+            else return 0;
+        }
+    }
+    return 1;
+}
+int judge(TB_text *a,TB_dou *b,TB_int *c,int type,char cond[LEN][M],int cp)
+{
+    if(strcmp(cond[cp-1],"exp\0")==0)
+    {
+        return jud(a,b,c,type,cond[0],cond[1]);
+    }
+    else if(strcmp(cond[cp-1],"name\0")==0)
     {
         
     }
@@ -385,6 +423,11 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)
 int delet(char tb_name[],char cond[LEN][M],int cp)
 {
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
+    /* printf("\e[1;30m"); */
+    /* for(i=0;i<cp;i++)puts(cond[i]); */
+    /* printf("%d\n",cp); */
+    /* printf("\e[0m"); */
+    
     TB_text tb_inst;
     TB_dou tb_insd;
     TB_int tb_insi;
@@ -394,13 +437,11 @@ int delet(char tb_name[],char cond[LEN][M],int cp)
     p_TableNode ndr=&nd;
     strcpy(nd.table.table_name,tb_name);
     if(get_columns(&nd,&ndr)==NULL)return error("No such form!!");
-
-    if(nd.dat_index==0)return error("This form is empty!!");
-    
+    if(nd.dat_index==0)return error("This form is empty!!");    
     if(cp)
     {
         char col_name[M];
-        strcpy(col_name,cond[0]);
+        strcpy(col_name,cond[cp-2]);
         int tb_pos=nd.dat_index;
         int row_pos=tb_pos;
         int row_ps=0;
@@ -414,7 +455,7 @@ int delet(char tb_name[],char cond[LEN][M],int cp)
             TB tb_ins=*(TB*)(&dat[row_pos]);
             int cl_pos=row_pos;
             int col_pos=nd.head_column;
-            int fg=1;
+            int fg=0;
             do
             {
                 TB rc=*(TB*)(&dat[cl_pos]);
@@ -424,9 +465,9 @@ int delet(char tb_name[],char cond[LEN][M],int cp)
                 if(strcmp(col_name,cnd.column.field_name)==0)
                 {
                     /* judge whether to delete */
-                    if(!judge(&tb_inst,&tb_insd,&tb_insi,typ,cond))
+                    if(judge(&tb_inst,&tb_insd,&tb_insi,typ,cond,cp))
                     {
-                        fg=0;break;
+                        fg=1;break;
                     }
                 }
                 col_pos=cnd.next_column;
@@ -455,14 +496,15 @@ int delet(char tb_name[],char cond[LEN][M],int cp)
     return 1;
 }
 
-int selec(char tb_name[],char in_f[LEN][M],int cpf)
+int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
 {
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
-    /* printf("%s\n",tb_name); */
-    /* printf("%d\n",cpf); */
-    /* for(i=0;i<cpf;i++){printf("%s\n",in_f[i]);} */
     int row=0,col=0,typ;
-
+    for(i=0;i<cpf;i++)
+        puts(in_f[i]);
+    puts("");
+    for(i=0;i<cpd;i++)
+        puts(cond[i]);
     TB_text tb_inst;
     TB_dou tb_insd;
     TB_int tb_insi;

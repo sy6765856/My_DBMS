@@ -7,6 +7,8 @@ extern char* yylval;
 exit {space}*(exit|EXIT)
 char [A-Za-z]
 num [0-9]+
+rel {num}\.{num}
+real {rel}|{num}
 name {char}+
 space [ \t\n]
 sp {space}+
@@ -99,7 +101,7 @@ exists (exists|EXISTS)
 union {space}*(union|UNION)
 %%
 {null} {yylval=strdup(yytext);return NL;}
-{num} {yylval=strdup(yytext);return NM;}
+{real} {yylval=strdup(yytext);return RL;}
 {type} {yylval=strdup(yytext);return TE;}
 {comma} {yylval=strdup(yytext);return CA;}
 {commas} {yylval=strdup(yytext);return CS;}

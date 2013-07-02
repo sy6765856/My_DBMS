@@ -12,7 +12,7 @@ typedef char* string;
  int cp[3];
  int k=0;
 %}
-%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DP TBS VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT USE DB SW EQ SR RE
+%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DP TBS VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT USE DB SW EQ SR RE RL
 %%
 /* sql statement */
 Sql : Statement | Sql Statement
@@ -44,7 +44,7 @@ show: SW TBS SN{
 /* condition */
 condition : NE coo condic{st_push($1);}
 coo: EQ{st_push($1);} | OPR{st_push($1);}
-condic:NM {st_push($1);}|CS NE CS{st_push($2);}
+condic:RL {st_push($1);}|CS NE CS{st_push($2);}
 
 /* select */
 select:ST SP col_na FM NE sell
@@ -65,7 +65,7 @@ create : CT TB NE LP col_deff RP SN {
 col_deff :col_def{st_init();}
 col_def: col | col_def CA col
 col: NE SP TE{st_push($1);st_push($3);}|NE SP TE cl{st_push($1);st_push($3);}
-cl: LP NM RP|SP NL|LP NM RP NL
+cl: LP RL RP|SP NL|LP RL RP NL
 
 /* insert */
 insert: IT NE in_f VA LP in_v RP SN
@@ -86,7 +86,7 @@ in_v:in_vv
     st_init();
 }
 
-in_vv:NM{st_push($1);}|CS NE CS{st_push($2);}|in_vv CA CS NE CS{st_push($4);} | in_vv CA NM{st_push($3);}
+in_vv:RL{st_push($1);}|CS NE CS{st_push($2);}|in_vv CA CS NE CS{st_push($4);} | in_vv CA RL{st_push($3);}
 
 
 /* delete */

@@ -254,7 +254,33 @@ int jud(TB_text *a,TB_dou *b,TB_int *c,int type,char op[],char va[])
     }
     else if(type==REAL)
     {
-        
+        int left=b->data;
+        int right=do_real(va);
+        if(strcmp(op,"=\0")==0)
+        {
+            if(left==right)return 1;
+            else return 0;
+        }
+        else if(strcmp(op,">\0")==0)
+        {
+            if(left>right)return 1;
+            else return 0;
+        }
+        else if(strcmp(op,"<\0")==0)
+        {
+            if(left<right)return 1;
+            else return 0;
+        }
+        else if(strcmp(op,">=\0")==0)
+        {
+            if(left>=right)return 1;
+            else return 0;
+        }
+        else if(strcmp(op,"<=\0")==0)
+        {
+            if(left<=right)return 1;
+            else return 0;
+        }
     }
     else if(type==INTEGER)
     {

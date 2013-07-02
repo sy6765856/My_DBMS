@@ -275,7 +275,7 @@ int judge(TB_text *a,TB_dou *b,TB_int *c,int type,char cond[LEN][M],int cp)
     return 1;
 }
 
-int check_row(int col_pos,int cl_pos,int type,char cond[LEN][M],int cp,int end)
+int check_row(int col_pos,int cl_pos,char cond[LEN][M],int cp,int end)
 {
     TB_text tb_inst;
     TB_dou tb_insd;
@@ -284,15 +284,12 @@ int check_row(int col_pos,int cl_pos,int type,char cond[LEN][M],int cp,int end)
     {
         TB tb_ins=*(TB*)(&dat[cl_pos]);
         ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
-        type=cnd.column.type_name;
+        int type=cnd.column.type_name;
         n_rd(&tb_inst,&tb_insd,&tb_insi,type,cl_pos);
                 
         if(strcmp(col_name,cnd.column.field_name)==0)
         {
-            if(!judge(&tb_inst,&tb_insd,&tb_insi,type,cond,cp))
-            {
-                return 0;
-            }
+            if(!judge(&tb_inst,&tb_insd,&tb_insi,type,cond,cp))return 0;
         }
         col_pos=cnd.next_column;
         cl_pos=tb_ins.nxt_col;
@@ -399,10 +396,15 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
     return 1;
 }
 
-int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)
+int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf,char codd[LEN][M],int cpd)
 {
+    for(i=0;i<cpf;i++)
+        printf("%s\n",cond[i]);
+    puts("");
+    for(i=0;i<cpd;i++)
+        printf("%s\n",codd[i]);
+    /* return 1; */
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
-    
     TableNode nd;
     p_TableNode ndr=&nd;
     strcpy(nd.table.table_name,tb_name);
@@ -422,23 +424,27 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)
         TB tb_hd=*(TB*)(&dat[row_pos]);
         int cl_pos=row_pos;
         int col_pos=nd.head_column;
-        do
+        int fg=1;
+        if(cpd)fg=check_row(col_pos,cl_pos,codd,cpd,nd.tail_column);
+        if(fg)
         {
-            TB tb_ins=*(TB*)(&dat[col_pos]);
-            ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
-            typ=cnd.column.type_name;
-            n_rd(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
-           
-            if(strcmp(col_name,cnd.column.field_name)==0)
+            do
             {
-                n_copy(&tb_inst,&tb_insd,&tb_insi,typ,cond[0]);
-                n_wt_one(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
-            }
-            col_pos=cnd.next_column;
-            cl_pos=tb_ins.nxt_col;
-        }while(col_pos!=nd.tail_column);
+                TB tb_ins=*(TB*)(&dat[col_pos]);
+                ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
+                typ=cnd.column.type_name;
+                n_rd(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
+           
+                if(strcmp(col_name,cnd.column.field_name)==0)
+                {
+                    n_copy(&tb_inst,&tb_insd,&tb_insi,typ,cond[0]);
+                    n_wt_one(&tb_inst,&tb_insd,&tb_insi,typ,cl_pos);
+                }
+                col_pos=cnd.next_column;
+                cl_pos=tb_ins.nxt_col;
+            }while(col_pos!=nd.tail_column);
+        }
         row_pos=tb_hd.nxt_row;
-        puts("%%");
     }while(row_pos);
     printf("\e[1;31m");
     puts("Update!!");
@@ -522,11 +528,6 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
 {
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
     int row=0,col=0,typ;
-    /* for(i=0;i<cpf;i++) */
-    /*     puts(in_f[i]); */
-    /* puts(""); */
-    /* for(i=0;i<cpd;i++) */
-    /*     puts(cond[i]); */
     TB_text tb_inst;
     TB_dou tb_insd;
     TB_int tb_insi;
@@ -557,7 +558,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
             int cl_pos=row_pos;
             int col_pos=nd.head_column;
             int fg=1;
-            if(cpd)fg=check_row(col_pos,cl_pos,typ,cond,cpd,nd.tail_column);
+            if(cpd)fg=check_row(col_pos,cl_pos,cond,cpd,nd.tail_column);
             if(fg)
             {
                 cl_pos=row_pos;
@@ -608,7 +609,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
             int cl_pos=row_pos;
             int col_pos=nd.head_column;
             int fh=1;
-            if(cpd)fh=check_row(col_pos,cl_pos,typ,cond,cpd,nd.tail_column);
+            if(cpd)fh=check_row(col_pos,cl_pos,cond,cpd,nd.tail_column);
             if(fh)
             {
                 cl_pos=row_pos;

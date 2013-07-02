@@ -98,17 +98,17 @@ dell:del{st_init();}
 del:SN|WE condition SN{st_push("exp\0");}|WE NE coo NE SN{st_push($4);st_push($2);st_push("name\0");} 
 
 /* update */
-update: UE NE SET NE EQ exp SN
+update: UE NE SET NE EQ eppp expp
 {
-    update($2,$4,st[(k+2)%3],cp[(k+2)%3]);
+    update($2,$4,st[(k+1)%3],cp[(k+1)%3],st[(k+2)%3],cp[(k+2)%3]);
 }
 /* expression */
-exp:epp WE conditio|epp
-epp:ep{st_init();}
-ep:con OPR con{st_push($2);}|con
-con:condic|NE{st_push($1);}
+expp:exp{st_init();}
+exp:WE condition SN{st_push("exp\0");}|SN
 
-conditio :condition{st_init();}
+eppp:epp{st_init();}
+epp:con OPR con{st_push($2);}|con
+con:condic|NE{st_push($1);}
 
 /* alter */
 alter: AT TB NE aler SN

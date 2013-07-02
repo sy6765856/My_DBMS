@@ -88,7 +88,7 @@ update {space}*(update|UPDATE){space}*
 set {sp}(set|SET){sp}
 
 /* delete */
-delete (DELETE|delete)
+delete {space}*(DELETE|delete)
 
 /* Nested query */
 any (any|ANY)

@@ -110,8 +110,7 @@ int sv_create_table(char table_name[],char in_f[LEN][M],int cp)
 {
     if(dat==NULL||dbf==NULL)return -1;
     int i;
-    for(i=0;i<cp;i++)
-        printf("%s\n",in_f[i]);
+    //for(i=0;i<cp;i++) printf("%s\n",in_f[i]);
     Column p[LEN];
     int ck=0,h=0;
     while(ck<cp)

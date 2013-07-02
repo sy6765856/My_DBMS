@@ -363,7 +363,7 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 127 "paser.y"
+#line 128 "paser.y"
 int main()
 {
     memset(cp,0,sizeof(cp));
@@ -732,64 +732,65 @@ break;
 case 54:
 #line 91 "paser.y"
 	{
+    puts("fdfd");
     delet(yystack.l_mark[-1],st[(k+2)%3],cp[(k+2)%3]);
 }
 break;
 case 55:
-#line 94 "paser.y"
+#line 95 "paser.y"
 	{st_init();}
 break;
 case 58:
-#line 99 "paser.y"
+#line 100 "paser.y"
 	{
     update(yystack.l_mark[-5],yystack.l_mark[-3],st[(k+2)%3],cp[(k+2)%3]);
 }
 break;
 case 61:
-#line 104 "paser.y"
+#line 105 "paser.y"
 	{st_init();}
 break;
 case 62:
-#line 105 "paser.y"
+#line 106 "paser.y"
 	{st_push(yystack.l_mark[-1]);}
 break;
 case 65:
-#line 106 "paser.y"
+#line 107 "paser.y"
 	{st_push(yystack.l_mark[0]);}
 break;
 case 66:
-#line 108 "paser.y"
+#line 109 "paser.y"
 	{st_init();}
 break;
 case 67:
-#line 112 "paser.y"
+#line 113 "paser.y"
 	{
     /* alt_tb($3);*/
 }
 break;
 case 68:
-#line 115 "paser.y"
+#line 116 "paser.y"
 	{st_init();}
 break;
 case 69:
-#line 115 "paser.y"
+#line 116 "paser.y"
 	{st_init();}
 break;
 case 72:
-#line 118 "paser.y"
+#line 119 "paser.y"
 	{st_push(yystack.l_mark[0]);}
 break;
 case 73:
-#line 118 "paser.y"
+#line 119 "paser.y"
 	{st_push(yystack.l_mark[-2]);}
 break;
 case 75:
-#line 122 "paser.y"
+#line 123 "paser.y"
 	{
     printf ("drop\n");
 }
 break;
-#line 792 "y.tab.c"
+#line 793 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

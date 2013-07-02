@@ -52,7 +52,8 @@ int do_int(char a[])
     for(i=0;i<len;i++)
     {
         ans*=10;
-        ans+=a[i]-'0';
+        if('0'<=a[i]&&a[i]<='9')ans+=a[i]-'0';
+        else return 0;
     }
     return ans;
 }
@@ -67,7 +68,8 @@ double do_real(char a[])
     double tea=0.10000;
     for(i=fg+1;i<len;i++)
     {
-        ans+=(a[i]-'0')*tea;
+        if('0'<=a[i]&&a[i]<='9')ans+=(a[i]-'0')*tea;
+        else return 0;
         tea=tea/10;
     }
     return ans;
@@ -214,29 +216,36 @@ void n_null(TB_text *a,TB_dou *b,TB_int *c,int type)
 
 void expression()
 {
+    
 }
 
 int judge(TB_text *a,TB_dou *b,TB_int *c,int type,char cond[LEN][M])
 {
+    if(type==TEXT)
+    {
+        
+    }
+    else if(type==REAL)
+    {
+        
+    }
+    else if(type==INTEGER)
+    {
+        
+    }
     return 1;
 }
+
 int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
 {
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
     if(cpf&&cpf!=cpv)return error("values not match");
 
-    /* debug */
-    /* printf ("%s\n",tb_name); */
-    /* printf ("%d %d\n",cpf,cpv); */
-    /* for(i=0;i<cpv;i++)puts(in_f[i]); */
-    /* for(i=0;i<cpv;i++)puts(in_v[i]); */
-    /* end */
-    
     TableNode nd;
     p_TableNode ndr=&nd;
     strcpy(nd.table.table_name,tb_name);
     if(get_columns(&nd,&ndr)==NULL)return error("No such form!!");
-    int tb_pos=nd.dat_index;//form head position
+    int tb_pos=nd.dat_index;
     
     int col_pos=nd.head_column;
     int ct=0,typ;
@@ -250,7 +259,6 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
         {
             ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
             typ=cnd.column.type_name;
-            printf("type: %d %d\n",typ,INTEGER);
             n_rd(&tb_inst,&tb_insd,&tb_insi,typ,tb_pos);
             
             strcpy(col_name,cnd.column.field_name);
@@ -265,8 +273,7 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
             }
             if(~fg)
             {
-                n_copy(&tb_inst,&tb_insd,&tb_insi,typ,in_v[fg]);
-                
+                n_copy(&tb_inst,&tb_insd,&tb_insi,typ,in_v[fg]);         
             }
             else n_null(&tb_inst,&tb_insd,&tb_insi,typ);
             
@@ -322,16 +329,15 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
             n_wt_one(&tb_inst,&tb_insd,&tb_insi,typ,le);
         }
     }
+    printf("\e[1;31m");
+    puts("Success!!");
+    printf("\e[0m");
     return 1;
 }
 
-int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)//type is the same
+int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)
 {
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
-    printf ("tb:%s\n",tb_name);
-    printf ("col:%s\n",col_name);
-    printf("%d\n",cpf);
-    for(i=0;i<cpf;i++)puts(cond[i]);
     
     TableNode nd;
     p_TableNode ndr=&nd;
@@ -370,18 +376,15 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf)//type is th
         row_pos=tb_hd.nxt_row;
         puts("%%");
     }while(row_pos);
+    printf("\e[1;31m");
+    puts("Update!!");
+    printf("\e[0m");
     return 1;
 }
 
 int delet(char tb_name[],char cond[LEN][M],int cp)
 {
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
-    /* debug */
-    printf ("%s\n",tb_name);
-    printf("%d\n",cp);
-    for(i=0;i<cp;i++)puts(cond[i]);
-    /* debug */
-    
     TB_text tb_inst;
     TB_dou tb_insd;
     TB_int tb_insi;
@@ -446,15 +449,18 @@ int delet(char tb_name[],char cond[LEN][M],int cp)
     {
         ndr->dat_index=0;
     }
+    printf("\e[1;31m");
+    puts("Delete!!");
+    printf("\e[0m");
     return 1;
 }
 
 int selec(char tb_name[],char in_f[LEN][M],int cpf)
 {
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");
-    printf("%s\n",tb_name);
-    printf("%d\n",cpf);
-    for(i=0;i<cpf;i++){printf("%s\n",in_f[i]);}
+    /* printf("%s\n",tb_name); */
+    /* printf("%d\n",cpf); */
+    /* for(i=0;i<cpf;i++){printf("%s\n",in_f[i]);} */
     int row=0,col=0,typ;
 
     TB_text tb_inst;
@@ -467,9 +473,18 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
     if(get_columns(&nd,&ndr)==NULL)return error("No such form!!");
 
     if(nd.dat_index==0)return error("This form is empty!!");
-    printf("%d\n",nd.dat_index);
+        
     if(cpf==1&&strcmp(in_f[0],"*\0")==0)
     {
+        int ctt=0,cl=nd.head_column;
+        do
+        {
+            ColumnNode cnd=*(ColumnNode*)(&dbf[cl]);
+            strcpy(form[row][col],cnd.column.field_name);
+            col++;cl=cnd.next_column;
+        }while(cl!=nd.tail_column);
+        row++;
+    
         int row_pos=nd.dat_index;
         do
         {
@@ -496,6 +511,26 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf)
     }
     else
     {
+        int ctt=0,cl=nd.head_column;
+        do
+        {
+            ColumnNode cnd=*(ColumnNode*)(&dbf[cl]);
+            int fg=-1;
+            for(j=0;j<cpf;j++)
+            {
+                if(strcmp(in_f[j],cnd.column.field_name)==0)
+                {
+                    fg=j;break;
+                }
+            }
+            if(~fg)
+            {
+                strcpy(form[row][col],cnd.column.field_name);
+                col++;
+            }cl=cnd.next_column;
+        }while(cl!=nd.tail_column);
+        row++;
+        
         int row_pos=nd.dat_index;
         do
         {

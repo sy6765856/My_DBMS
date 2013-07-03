@@ -495,6 +495,14 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf,char codd[LE
     return 1;
 }
 
+int dele(char tb_name_list[LEN][M],int cpl,char cond[LEN][M],int cp)
+{
+    for(i=0;i<cpl;i++)
+    {
+        delet(tb_name_list[i],cond,cp);
+    }
+    return 1;
+}
 int delet(char tb_name[],char cond[LEN][M],int cp)
 {
     if(dat==NULL||dbf==NULL)return error("Please select a database!!");

@@ -92,10 +92,13 @@ in_vv:RL{st_push($1);}|CS NE CS{st_push($2);}|in_vv CA CS NE CS{st_push($4);} | 
 
 
 /* delete */
-delete: DE FM NE dell
+delete: DE FM gh dell
 {
-    delet($3,st[(k+2)%3],cp[(k+2)%3]);
+    dele(st[(k+1)%3],cp[(k+1)%3],st[(k+2)%3],cp[(k+2)%3]);
 }
+gh:ghh{st_init();}
+ghh:NE{st_push($1);}|NE CA ghh{st_push($1);}
+
 dell:del{st_init();}
 del:SN|WE condition SN{st_push("exp\0");}|WE NE coo NE SN{st_push($4);st_push($2);st_push("name\0");} 
 

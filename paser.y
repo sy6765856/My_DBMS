@@ -111,13 +111,14 @@ epp:con OPR con{st_push($2);}|con
 con:condic|NE{st_push($1);}
 
 /* alter */
-alter: AT TB NE aler SN
+alter: AT TB NE alerr SN
 {
-    // alt_tb($3);
+    alt_tb($3,st[(k+2)%3],cp[(k+2)%3]);
 }
-aler:add{st_init();}|drr{st_init();}
+alerr:aler{st_init();}
+aler:add{st_push("add\0");}|drr{st_push("drop\0");}
 add:AD col_def
-drr:DP cll
+drr:DP SP cll
 cll: NE{st_push($1);} |NE CA cll {st_push($1);}
 
 /* drop */

@@ -178,7 +178,35 @@ int create_table(char table_name[], int num_column, p_Column columns)
     return 0;
 }
 
-int alter_table(char table_name[], Column column, AlterMode alter_mode) {
+int sv_alter_table(char table_name[],char in_f[LEN][M],int cp)
+{
+    if(dat==NULL||dbf==NULL)return -1;
+    printf("%s\n",table_name);
+    int i;
+    for(i=0;i<cp;i++)
+        printf("%s\n",in_f[i]);
+    Column column;
+    int alter_mode;
+    int ck=0;
+    while(ck<cp-1)
+    {
+        strcpy(column.field_name,in_f[ck]);ck++;
+        if(strcmp(in_f[cp-1],"add\0")==0)
+        {
+            alter_mode=ADD;
+            if(strcmp(in_f[ck],"int\0")==0||strcmp(in_f[ck],"INT\0")==0)column.type_name=INTEGER;
+            else if(strcmp(in_f[ck],"char\0")==0||strcmp(in_f[ck],"CHAR\0")==0)column.type_name=TEXT;
+            else if(strcmp(in_f[ck],"real\0")==0||strcmp(in_f[ck],"REAL\0")==0)column.type_name=REAL;
+            ck++;
+        }
+        else if(strcmp(in_f[cp-1],"drop\0")==0)alter_mode=DROP;
+        alter_table(table_name,column,alter_mode);
+    }
+    return 1;
+}
+
+int alter_table(char table_name[], Column column, AlterMode alter_mode)
+{
     p_TableNode table_node;
     if ((table_node = get_table_node(table_name)) == NULL) {
         error(TABLE_NOT_EXIST, table_name);
@@ -221,6 +249,7 @@ int add_column(p_TableNode table_node, Column column)
     memcpy(&(cols_node->column), &column, sizeof(Column));
 
     table_node->tail_column = pre_end;
+    
     return 0;
 }
 

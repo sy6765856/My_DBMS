@@ -214,11 +214,6 @@ void n_null(TB_text *a,TB_dou *b,TB_int *c,int type)
     else if(type==INTEGER)c->data=0;
 }
 
-void expression()
-{
-    
-}
-
 int jud(TB_text *a,TB_dou *b,TB_int *c,int type,char op[],char va[])
 {
     if(type==TEXT)

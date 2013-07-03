@@ -5,4 +5,8 @@ create table one(a int);
 create table two(a int,b int);
 create table three(a int ,b int,c int);
 show tables;
+
+insert into three values(12,212,56);
+insert into three values(23,4,1);
+insert into three values(3,7,65);
 exit;

@@ -581,7 +581,6 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
     if(get_columns(&nd,&ndr)==NULL)return error("No such form!!");
 
     if(nd.dat_index==0)return error("This form is empty!!");
-    printf("%d\n",nd.dat_index);
     if(cpd)strcpy(col_name,cond[cpd-2]);
     if(cpf==1&&strcmp(in_f[0],"*\0")==0)
     {

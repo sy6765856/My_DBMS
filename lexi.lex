@@ -78,7 +78,7 @@ join (join|JOIN)
 /* alter */
 alter {space}*(alter|ALTER)
 column {sp}(column|COLUMN){sp}
-add {sp}(ADD|add){sp}
+add {space}*(ADD|add)
 
 /* insert */
 insert {space}*(INSERT|insert)

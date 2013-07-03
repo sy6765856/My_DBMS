@@ -40,7 +40,9 @@ rename : RE TB NE SP NE SN
 /* show */
 show: SW TBS SN{
     shw_tb();
- }
+ }|SW TB NE SN{show_table($3);}
+
+
 /* condition */
 condition : NE coo condic{st_push($1);}
 coo: EQ{st_push($1);} | OPR{st_push($1);}
@@ -117,8 +119,8 @@ alter: AT TB NE alerr SN
 }
 alerr:aler{st_init();}
 aler:add{st_push("add\0");}|drr{st_push("drop\0");}
-add:AD col_def
-drr:DP SP cll
+add:AD CN col_def
+drr:DP CN cll
 cll: NE{st_push($1);} |NE CA cll {st_push($1);}
 
 /* drop */
@@ -131,9 +133,7 @@ drop_column: DP TB NE SN{
 int main()
 {
     memset(cp,0,sizeof(cp));
-    printf("\e[1;32m");
     yyparse();
-    printf("\e[0m");
     return 0;
 }
 int st_init()
@@ -149,5 +149,5 @@ int st_push(char a[])
 }
 int yyerror(char *msg)
 {
-    printf("\e[1;31mError encountered: \e[1;32m%s\e[0m \n", msg);
+    printf("Error encountered: %s\n", msg);
 }

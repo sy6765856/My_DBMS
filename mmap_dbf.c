@@ -180,10 +180,7 @@ int create_table(char table_name[], int num_column, p_Column columns)
 int sv_alter_table(char table_name[],char in_f[LEN][M],int cp)
 {
     if(dat==NULL||dbf==NULL)return -1;
-    printf("%s\n",table_name);
     int i;
-    for(i=0;i<cp;i++)
-        printf("%s\n",in_f[i]);
     Column column;
     int alter_mode;
     int ck=0;
@@ -335,7 +332,6 @@ int drop_table(char table_name[])
 
 int rename_table(char table_name[], char new_name[])
 {
-    //printf("%s %s\n",table_name,new_name);
     p_TableNode table_node = get_table_node(table_name);
     if (table_node == NULL) {
         error(TABLE_NOT_EXIST, table_name);
@@ -491,7 +487,12 @@ int safe_add_dat_space(int size)
     else
     {
         g_dat_fi.st_size += size;
-
     }
     return 0;
  }
+
+int show_table(char table_name[])
+{
+    printf("%s\n",table_name);
+    return 1;
+}

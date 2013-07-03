@@ -123,8 +123,8 @@ cll: NE{st_push($1);} |NE CA cll {st_push($1);}
 
 /* drop */
 drop: drop_column
-drop_column: DP SN{
-    printf ("drop\n");
+drop_column: DP TB NE SN{
+    drop_table($3);
 }
 
 %%

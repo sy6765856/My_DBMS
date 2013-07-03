@@ -9,4 +9,6 @@ show tables;
 insert into three values(12,212,56);
 insert into three values(23,4,1);
 insert into three values(3,7,65);
+
+insert into one values(1);
 exit;

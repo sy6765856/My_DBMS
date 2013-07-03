@@ -393,7 +393,7 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
             }
             n_wt(&tb_inst,&tb_insd,&tb_insi,typ);
             col_pos=cnd.next_column;
-        }while(col_pos!=nd.tail_column);
+        }while(col_pos!=0);
         
         if(nd.dat_index==0)
         {
@@ -426,7 +426,7 @@ int insert(char tb_name[],char in_f[LEN][M],int cpf,char in_v[LEN][M],int cpv)
             }
             n_wt(&tb_inst,&tb_insd,&tb_insi,typ);
             col_pos=cnd.next_column;
-        }while(col_pos!=nd.tail_column);
+        }while(col_pos!=0);
         
         if(nd.dat_index==0)
         {
@@ -467,7 +467,7 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf,char codd[LE
         int col_pos=nd.head_column;
         int fg=1;
         printf("cpd: %d\n",cpd);
-        if(cpd)fg=check_row(col_pos,cl_pos,codd,cpd,nd.tail_column,codd[cpd-2]);
+        if(cpd)fg=check_row(col_pos,cl_pos,codd,cpd,0,codd[cpd-2]);
         printf("fg: %d\n",fg);
         if(fg)
         {
@@ -485,7 +485,7 @@ int update(char tb_name[],char col_name[],char cond[LEN][M],int cpf,char codd[LE
                 }
                 col_pos=cnd.next_column;
                 cl_pos=tb_ins.nxt_col;
-            }while(col_pos!=nd.tail_column);
+            }while(col_pos!=0);
         }
         row_pos=tb_hd.nxt_row;
     }while(row_pos);
@@ -543,7 +543,7 @@ int delet(char tb_name[],char cond[LEN][M],int cp)
                 }
                 col_pos=cnd.next_column;
                 cl_pos=rc.nxt_col;
-            }while(col_pos!=nd.tail_column);
+            }while(col_pos!=0);
             if(fg)
             {
                 if(row_ps)
@@ -581,6 +581,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
     if(get_columns(&nd,&ndr)==NULL)return error("No such form!!");
 
     if(nd.dat_index==0)return error("This form is empty!!");
+    printf("%d\n",nd.dat_index);
     if(cpd)strcpy(col_name,cond[cpd-2]);
     if(cpf==1&&strcmp(in_f[0],"*\0")==0)
     {
@@ -590,9 +591,8 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
             ColumnNode cnd=*(ColumnNode*)(&dbf[cl]);
             strcpy(form[row][col],cnd.column.field_name);
             col++;cl=cnd.next_column;
-        }while(cl!=nd.tail_column);
+        }while(cl!=0);
         row++;
-        
         int row_pos=nd.dat_index;
         int coll=0;
         do
@@ -601,7 +601,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
             int cl_pos=row_pos;
             int col_pos=nd.head_column;
             int fg=1;
-            if(cpd)fg=check_row(col_pos,cl_pos,cond,cpd,nd.tail_column,col_name);
+            if(cpd)fg=check_row(col_pos,cl_pos,cond,cpd,0,col_name);
             if(fg)
             {
                 cl_pos=row_pos;
@@ -617,7 +617,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
                     col++;
                     col_pos=cnd.next_column;
                     cl_pos=tb_ins.nxt_col;
-                }while(col_pos!=nd.tail_column);
+                }while(col_pos!=0);
                 row++;
             }
             row_pos=rr.nxt_row;
@@ -642,7 +642,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
                 strcpy(form[row][col],cnd.column.field_name);
                 col++;
             }cl=cnd.next_column;
-        }while(cl!=nd.tail_column);
+        }while(cl!=0);
         row++;
         
         int row_pos=nd.dat_index;
@@ -652,7 +652,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
             int cl_pos=row_pos;
             int col_pos=nd.head_column;
             int fh=1;
-            if(cpd)fh=check_row(col_pos,cl_pos,cond,cpd,nd.tail_column,col_name);
+            if(cpd)fh=check_row(col_pos,cl_pos,cond,cpd,0,col_name);
             if(fh)
             {
                 cl_pos=row_pos;
@@ -679,7 +679,7 @@ int selec(char tb_name[],char in_f[LEN][M],int cpf,char cond[LEN][M],int cpd)
                     }
                     col_pos=cnd.next_column;
                     cl_pos=tb_ins.nxt_col;
-                }while(col_pos!=nd.tail_column);
+                }while(col_pos!=0);
                 row++;
             }
             row_pos=rr.nxt_row;
@@ -717,9 +717,9 @@ int alter_add(p_TableNode ndr,int type)
             tb_ins=*(TB*)(&dat[cl_pos]);
             ColumnNode cnd=*(ColumnNode*)(&dbf[col_pos]);
             col_pos=cnd.next_column;
-            if(col_pos==nd.tail_column)break;
+            if(col_pos==0)break;
             cl_pos=tb_ins.nxt_col;
-        }while(col_pos!=nd.tail_column);
+        }while(col_pos!=0);
         
         tb_ins.nxt_col=file_length;
         *(TB*)(&dat[cl_pos])=tb_ins;
@@ -761,7 +761,7 @@ int alter_dele(p_TableNode ndr,int type,char col_name[])
             else cl_ps=cl_pos;
             col_pos=cnd.next_column;
             cl_pos=tb_ins.nxt_col;
-        }while(col_pos!=nd.tail_column);
+        }while(col_pos!=0);
         row_pos=rr.nxt_row;
     }while(row_pos);
     return 1;

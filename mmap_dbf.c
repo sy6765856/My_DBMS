@@ -94,7 +94,6 @@ int show_tables()
     p_TableNode table_node;
     int num_table = INT(g_mem_dbf[0]);
     head = INT(g_mem_dbf[4]);
-    //tables = (char *)calloc(TABLE_NAME_LENGTH, num_table);
     table_node = PTNODE(g_mem_dbf[head]);
     for (; i < num_table; i++) {
         strcpy(tables[i], table_node->table.table_name);
@@ -110,7 +109,7 @@ int sv_create_table(char table_name[],char in_f[LEN][M],int cp)
 {
     if(dat==NULL||dbf==NULL)return -1;
     int i;
-    //for(i=0;i<cp;i++) printf("%s\n",in_f[i]);
+    for(i=0;i<cp;i++) printf("%s\n",in_f[i]);
     Column p[LEN];
     int ck=0,h=0;
     while(ck<cp)
@@ -130,7 +129,7 @@ int sv_create_table(char table_name[],char in_f[LEN][M],int cp)
              p[h].type_name=REAL;
         }ck++;h++;
     }
-    if(create_table(table_name,cp,p)!=-1)puts("Create Successfully!!");
+    if(create_table(table_name,cp/2,p)!=-1)puts("Create Successfully!!");
     return 1;
 }
 
@@ -168,7 +167,7 @@ int create_table(char table_name[], int num_column, p_Column columns)
     table_node->tail_column = 0;
     table_node->dat_index = 0;
     strcpy(table_node->table.table_name, table_name);
-    table_node->table.num_column = num_column;
+    table_node->table.num_column = 0;
 
     for (i = 0; i < num_column; i++) {
         add_column(table_node, columns[i]);
@@ -233,7 +232,7 @@ int add_column(p_TableNode table_node, Column column)
 {
     int pre_end = g_dbf_fi.st_size;
     p_ColumnNode cols_node, tail_node;
-
+    alter_add(table_node,column.type_name);
     if (table_node->tail_column != 0) {
         tail_node = PCNODE(g_mem_dbf[table_node->tail_column]);
         tail_node->next_column = pre_end;
@@ -249,7 +248,7 @@ int add_column(p_TableNode table_node, Column column)
     memcpy(&(cols_node->column), &column, sizeof(Column));
 
     table_node->tail_column = pre_end;
-    
+    table_node->table.num_column += 1;
     return 0;
 }
 
@@ -257,11 +256,12 @@ int drop_column(p_TableNode table_node, Column column)
 {
     p_ColumnNode col_node = get_col_node(table_node, column.field_name);
     p_ColumnNode pre_node, next_node;
+    
     if (col_node == NULL) {
         error(COLUMN_NOT_EXIST, column.field_name);
         return -1;
     }
-
+    alter_dele(table_node,column.type_name);
     if (col_node->pre_column == 0) {
         table_node->head_column = col_node->next_column;
         if (col_node->next_column != 0) {
@@ -280,6 +280,7 @@ int drop_column(p_TableNode table_node, Column column)
         pre_node->next_column = col_node->next_column;
         next_node->pre_column = col_node->pre_column; 
     }
+    table_node->table.num_column -= 1;
     return 0;
 }
 
@@ -491,8 +492,6 @@ int safe_add_dat_space(int size)
     {
         g_dat_fi.st_size += size;
 
-     }
-
-     return 0;
-
+    }
+    return 0;
  }

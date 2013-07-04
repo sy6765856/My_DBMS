@@ -12,7 +12,7 @@ typedef char* string;
  int cp[3];
  int k=0;
 %}
-%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DP TBS VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT USE DB SW EQ SR RE RL
+%token ST NE FM SP WE GY IT DE SN UE CT CST OPR OPR_EN AS WN TN ELSE TP BN IN LE JN AT CN AD DP TBS VA SET AY AL EX UN LP RP CA TE NM NL CS TB EXIT USE DB SW EQ SR RE RL PY UUE
 %%
 /* sql statement */
 Sql : Statement | Sql Statement
@@ -60,14 +60,19 @@ sell:sel{st_init();}
 sel:SN|WE condition SN{st_push("exp\0");}|WE NE coo NE SN{st_push($4);st_push($2);st_push("name\0");}
 
 /* create table */
-create : CT TB NE LP col_deff RP SN {
+create:ctt{st_init();}
+ctt : CT TB NE LP col_deff RP SN {
     crt_tb($3,st[(k+2)%3],cp[(k+2)%3]);
 }
 
 col_deff :col_def{st_init();}
 col_def: col | col_def CA col
-col: NE SP TE{st_push($1);st_push($3);}|NE SP TE cl{st_push($1);st_push($3);}
-cl: LP RL RP|SP NL|LP RL RP NL
+
+col: NE SP TE{st_push("len\0");st_push("NULL\0");st_push("tyre\0");st_push($1);st_push($3);}|NE SP TE cl{st_push("tyre\0");st_push($1);st_push($3);}|NE SP TE cl tyre{st_push($1);st_push($3);}
+
+cl: SP{st_push("len\0");st_push("NULL\0");}|LP RL RP{st_push($2);st_push("NULL\0");}|SP NL{st_push("len\0");st_push($2);}|LP RL RP NL{st_push($2);st_push($4);}
+
+tyre:UUE{st_push($1);}
 
 /* insert */
 insert: IT NE in_f VA LP in_v RP SN

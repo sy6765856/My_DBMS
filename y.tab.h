@@ -48,3 +48,5 @@
 # define SR 304
 # define RE 305
 # define RL 306
+# define PY 307
+# define UUE 308

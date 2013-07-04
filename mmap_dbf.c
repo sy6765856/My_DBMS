@@ -66,8 +66,10 @@ int drop_database(char db_name[])
 
 int use_database(char db_name[])
 {
-    if (check_exist_db(db_name) == FALSE) {
-        error(DB_NOT_EXIST, db_name);
+    if (check_exist_db(db_name) == FALSE)
+    {
+        //error(DB_NOT_EXIST, db_name);
+        errors("database not exist!!");
         return -1;
     }
 
@@ -76,13 +78,13 @@ int use_database(char db_name[])
     }
 
     if (strcmp(db_name, g_db_name) == 0) {
-        error(DB_IN_USE, db_name);
+        //error(DB_IN_USE, db_name);
+        errors("database is in use!!");
         return 0;
     }
     
     strcpy(g_db_name, db_name);
     open_db();
-    puts("$$");
     return 0;
 }
 
@@ -114,22 +116,35 @@ int sv_create_table(char table_name[],char in_f[LEN][M],int cp)
     int ck=0,h=0;
     while(ck<cp)
     {
-        strcpy(p[h].field_name,in_f[ck]);ck++;
-        puts(p[h].field_name);
-        if(strcmp(in_f[ck],"char\0")==0)
+        strcpy(p[h].field_name,in_f[ck+3]);
+        if(strcmp(in_f[ck+4],"char\0")==0)
         {
+            if(strcmp(in_f[ck],"len\0")==0)p[h].word_size=256;
+            else p[h].word_size=do_int(in_f[ck]);
+           
             p[h].type_name=TEXT;
         }
-        else if(strcmp(in_f[ck],"int\0")==0)
+        else if(strcmp(in_f[ck+4],"int\0")==0)
         {
-             p[h].type_name=INTEGER;
+            p[h].type_name=INTEGER;
         }
-        else if(strcmp(in_f[ck],"double\0")==0)
+        else if(strcmp(in_f[ck+4],"double\0")==0)
         {
-             p[h].type_name=REAL;
-        }ck++;h++;
+            p[h].type_name=REAL;
+        }
+        
+        if(strcmp(in_f[ck+1],"NULL\0")==0||strcmp(in_f[ck+1],"null\0")==0)
+        {
+            p[h].null_flag=1;
+        }
+        else p[h].null_flag=0;
+        
+        if(strcmp(in_f[ck+1],"primary key\0")==0)p[h].key=1;
+        else p[h].key=0;
+        if(p[h].key&&p[h].null_flag)return errors("primary key can not be null!!");
+        ck+=5;h++;
     }
-    if(create_table(table_name,cp/2,p)!=-1)puts("Create Successfully!!");
+    if(create_table(table_name,h,p)!=-1)infos("Create Successfully!!");
     return 1;
 }
 
@@ -142,11 +157,13 @@ int create_table(char table_name[], int num_column, p_Column columns)
     p_TableNode table_node, pre_tail_node;
 
     if (g_mem_dbf == NULL) {
-        error(DB_NOT_CHOICED);
+        //error(DB_NOT_CHOICED);
+        errors("db not choiced");
         return -1;
     }
     if (check_exist_table(table_name) == TRUE) {
-        error(TABLE_EXIST, table_name);
+        //error(TABLE_EXIST, table_name);
+        errors("table exists");
         return -1;
     }
     safe_add_space(sizeof(TableNode));
@@ -179,24 +196,24 @@ int create_table(char table_name[], int num_column, p_Column columns)
 
 int sv_alter_table(char table_name[],char in_f[LEN][M],int cp)
 {
-    if(dat==NULL||dbf==NULL)return -1;
+    if(dat==NULL||dbf==NULL)return errors("use a database first!!");
     int i;
     Column column;
     int alter_mode;
     int ck=0;
     while(ck<cp-1)
     {
-        strcpy(column.field_name,in_f[ck]);ck++;
+        strcpy(column.field_name,in_f[ck+3]);
         if(strcmp(in_f[cp-1],"add\0")==0)
         {
             alter_mode=ADD;
-            if(strcmp(in_f[ck],"int\0")==0||strcmp(in_f[ck],"INT\0")==0)column.type_name=INTEGER;
-            else if(strcmp(in_f[ck],"char\0")==0||strcmp(in_f[ck],"CHAR\0")==0)column.type_name=TEXT;
-            else if(strcmp(in_f[ck],"real\0")==0||strcmp(in_f[ck],"REAL\0")==0)column.type_name=REAL;
-            ck++;
+            if(strcmp(in_f[ck+4],"int\0")==0||strcmp(in_f[ck],"INT\0")==0)column.type_name=INTEGER;
+            else if(strcmp(in_f[ck+4],"char\0")==0||strcmp(in_f[ck],"CHAR\0")==0)column.type_name=TEXT;
+            else if(strcmp(in_f[ck+4],"real\0")==0||strcmp(in_f[ck],"REAL\0")==0)column.type_name=REAL;
         }
         else if(strcmp(in_f[cp-1],"drop\0")==0)alter_mode=DROP;
         alter_table(table_name,column,alter_mode);
+        ck+=5;
     }
     return 1;
 }
@@ -346,8 +363,10 @@ p_Column get_columns(p_TableNode table_node, p_TableNode *tp)
     p_Column columns;
     p_ColumnNode tmp_cols;
     int i = 0;
+    
     if((*tp = get_table_node(table_node->table.table_name)) == NULL) {
-        error(TABLE_NOT_EXIST, table_node->table.table_name);
+        //error(TABLE_NOT_EXIST, table_node->table.table_name);
+        errors("Table not exist");
         return NULL;
     }
     memcpy(table_node, *tp, sizeof(TableNode));

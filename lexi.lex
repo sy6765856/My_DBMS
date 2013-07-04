@@ -41,11 +41,12 @@ create {space}*(CREATE|create)
 constraint (CONSTRAINT|constraint)
 
 /* constraint types */
-null null|NULL|NOT{sp}NULL|not{sp}null
 unique (unique|UNIQUE)
 key (KEY|key)
 p_key (PRIMARY|primary){sp}{key}
-f_key (FOREIGN|foreign){sp}{key}
+f_key {space}*(FOREIGN|foreign){sp}{key}
+null null|NULL|NOT{sp}NULL|not{sp}null|{p_key}
+
 
 /* op */
 eq [=]
@@ -153,7 +154,9 @@ union {space}*(union|UNION)
 {rename} { yylval = strdup(yytext);return RE; }
 {show} { yylval = strdup(yytext);return SW; }
 {database} { yylval = strdup(yytext);return DB; }
+{unique} { yylval = strdup(yytext);return UUE; }
 {name} { yylval = strdup(yytext);return NE; }
+
 %%
 int yywrap()
 {
